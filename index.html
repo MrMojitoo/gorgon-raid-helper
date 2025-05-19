@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>NWA Gorgon Raid Helper</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: sans-serif;
+      background-color: #0e0e0e;
+      color: white;
+    }
+    header {
+      background: #1f1f1f;
+      padding: 10px;
+      text-align: center;
+      font-size: 1.5em;
+      font-weight: bold;
+    }
+    .monster-buttons, .attack-buttons {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      justify-content: center;
+      margin: 20px 0;
+    }
+    .monster-buttons button, .attack-buttons button {
+      background: #333;
+      color: white;
+      border: none;
+      padding: 10px 15px;
+      cursor: pointer;
+      border-radius: 5px;
+    }
+    .monster-buttons button:hover, .attack-buttons button:hover {
+      background: #555;
+    }
+    .attack-info {
+      text-align: center;
+      padding: 20px;
+    }
+    video {
+      max-width: 600px;
+      width: 100%;
+      margin-top: 10px;
+      border-radius: 10px;
+    }
+    #raidplan {
+      margin: 20px auto;
+      width: 90%;
+      max-width: 1200px;
+      border: 2px solid #444;
+      position: relative;
+    }
+    #canvas {
+      position: absolute;
+      top: 0;
+      left: 0;
+      z-index: 10;
+    }
+    #tools {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      margin: 20px 0;
+      gap: 10px;
+    }
+    #tools input[type=color], #tools input[type=range], #tools input[type=checkbox] {
+      margin-right: 10px;
+    }
+    #icon-bank img {
+      width: 40px;
+      margin: 5px;
+      cursor: grab;
+    }
+    #icon-layer {
+      position: absolute;
+      top: 0;
+      left: 0;
+      z-index: 5;
+    }
+  </style>
+</head>
+<body>
+  <header>NWA Gorgon Raid Helper</header>
+
+  <div class="monster-buttons" id="monsterButtons"></div>
+  <div class="attack-buttons" id="attackButtons"></div>
+
+  <div class="attack-info" id="attackInfo"></div>
+
+  <hr />
+  <h2 style="text-align: center">Raidplan</h2>
+
+  <div id="tools">
+    <label>Couleur: <input type="color" id="colorPicker" value="#ff0000"></label>
+    <label>Epaisseur: <input type="range" id="thickness" min="1" max="10" value="3"></label>
+    <label>Estomper: <input type="checkbox" id="fadeCheckbox"> après <input type="number" id="fadeTime" min="1" value="5"> s</label>
+    <button onclick="clearCanvas()">Effacer</button>
+    <button onclick="saveImage()">Sauvegarder</button>
+    <input type="file" accept="image/*" onchange="setBackground(event)">
+  </div>
+
+  <div id="raidplan">
+    <img id="background" style="width:100%;" />
+    <canvas id="icon-layer"></canvas>
+    <canvas id="canvas"></canvas>
+  </div>
+
+  <div id="icon-bank" style="text-align: center">
+    <img src="icons/tank.png" draggable="true" ondragstart="startDrag(event)">
+    <img src="icons/dps.png" draggable="true" ondragstart="startDrag(event)">
+    <img src="icons/heal.png" draggable="true" ondragstart="startDrag(event)">
+    <!-- Ajoute plus d'icônes selon besoin -->
+  </div>
+
+  <script>
+    const monsters = {
+      "Corvid": [
+        { name: "Dive Bomb", type: "Melee", range: "Close", damage: "High", video: "videos/corvid_divebomb.mp4" },
+        { name: "Feather Rain", type: "Ranged", range: "Long", damage: "Medium", video: "videos/corvid_featherrain.mp4" },
+        { name: "Feather Shot Left", type: "Ranged", range: "Mid", damage: "Low", video: "videos/corvid_shotleft.mp4" },
+        { name: "Feather Shot Right", type: "Ranged", range: "Mid", damage: "Low", video: "videos/corvid_shotright.mp4" },
+        { name: "Swipe Left", type: "Melee", range: "Close", damage: "Medium", video: "videos/corvid_swipeleft.mp4" },
+        { name: "Swipe Right", type: "Melee", range: "Close", damage: "Medium", video: "videos/corvid_swiperight.mp4" },
+        { name: "Dash Left", type: "Melee", range: "Charge", damage: "High", video: "videos/corvid_dashleft.mp4" },
+        { name: "Dash Right", type: "Melee", range: "Charge", damage: "High", video: "videos/corvid_dashright.mp4" },
+      ],
+      // Ajoute ici les autres monstres et leurs attaques...
+    };
+
+    const monsterList = ["Echidna", "Typhon", "Medusa", "Boar", "Corvid", "Reindeer", "Wolf", "Spider", "Elephant", "Gorilla", "Rat"];
+
+    const monsterButtons = document.getElementById('monsterButtons');
+    const attackButtons = document.getElementById('attackButtons');
+    const attackInfo = document.getElementById('attackInfo');
+
+    monsterList.forEach(monster => {
+      const btn = document.createElement('button');
+      btn.textContent = monster;
+      btn.onclick = () => loadAttacks(monster);
+      monsterButtons.appendChild(btn);
+    });
+
+    function loadAttacks(monster) {
+      attackButtons.innerHTML = '';
+      attackInfo.innerHTML = '';
+      (monsters[monster] || []).forEach(attack => {
+        const btn = document.createElement('button');
+        btn.textContent = attack.name;
+        btn.onclick = () => showAttackInfo(attack);
+        attackButtons.appendChild(btn);
+      });
+    }
+
+    function showAttackInfo(attack) {
+      attackInfo.innerHTML = `
+        <h3>${attack.name}</h3>
+        <p>Type: ${attack.type}</p>
+        <p>Portée: ${attack.range}</p>
+        <p>Dégâts: ${attack.damage}</p>
+        <video autoplay loop muted src="${attack.video}"></video>
+      `;
+    }
+
+    // --- RAIDPLAN ---
+    const canvas = document.getElementById('canvas');
+    const iconLayer = document.getElementById('icon-layer');
+    const ctx = canvas.getContext('2d');
+    let drawing = false;
+
+    function resizeCanvases() {
+      const rect = document.getElementById('raidplan').getBoundingClientRect();
+      [canvas, iconLayer].forEach(c => {
+        c.width = rect.width;
+        c.height = rect.height;
+      });
+    }
+
+    window.addEventListener('resize', resizeCanvases);
+    window.addEventListener('load', resizeCanvases);
+
+    canvas.addEventListener('mousedown', () => drawing = true);
+    canvas.addEventListener('mouseup', () => drawing = false);
+    canvas.addEventListener('mousemove', draw);
+
+    function draw(e) {
+      if (!drawing) return;
+      ctx.strokeStyle = document.getElementById('colorPicker').value;
+      ctx.lineWidth = document.getElementById('thickness').value;
+      ctx.lineCap = 'round';
+      ctx.lineTo(e.offsetX, e.offsetY);
+      ctx.stroke();
+      ctx.beginPath();
+      ctx.moveTo(e.offsetX, e.offsetY);
+
+      if (document.getElementById('fadeCheckbox').checked) {
+        setTimeout(() => {
+          ctx.clearRect(e.offsetX - 5, e.offsetY - 5, 10, 10);
+        }, document.getElementById('fadeTime').value * 1000);
+      }
+    }
+
+    function clearCanvas() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      iconLayer.getContext('2d').clearRect(0, 0, iconLayer.width, iconLayer.height);
+    }
+
+    function saveImage() {
+      const composite = document.createElement('canvas');
+      composite.width = canvas.width;
+      composite.height = canvas.height;
+      const cx = composite.getContext('2d');
+      cx.drawImage(document.getElementById('background'), 0, 0, canvas.width, canvas.height);
+      cx.drawImage(iconLayer, 0, 0);
+      cx.drawImage(canvas, 0, 0);
+      const link = document.createElement('a');
+      link.download = 'raidplan.png';
+      link.href = composite.toDataURL();
+      link.click();
+    }
+
+    function setBackground(e) {
+      const reader = new FileReader();
+      reader.onload = () => document.getElementById('background').src = reader.result;
+      reader.readAsDataURL(e.target.files[0]);
+    }
+
+    function startDrag(e) {
+      const img = e.target;
+      iconLayer.ondrop = ev => {
+        ev.preventDefault();
+        const x = ev.offsetX;
+        const y = ev.offsetY;
+        const icon = new Image();
+        icon.src = img.src;
+        icon.onload = () => {
+          iconLayer.getContext('2d').drawImage(icon, x - 20, y - 20, 40, 40);
+        };
+      };
+      iconLayer.ondragover = ev => ev.preventDefault();
+    }
+  </script>
+</body>
+</html>
