@@ -144,15 +144,15 @@
             "variants": [
                 {
                     "label": "Four + Heavy",
-                    "video": "boar_bunch_fouruppercut.webm"
+                    "video": "boar_punch_fouruppercut.webm"
                 },
                 {
                     "label": "Two + Heavy",
-                    "video": "boar_bunch_twouppercut.webm"
+                    "video": "boar_punch_twouppercut.webm"
                 },
                 {
                     "label": "Four + 360 Heavy",
-                    "video": "boar_bunch_two360uppercut.webm"
+                    "video": "boar_punch_two360uppercut.webm"
                 }
             ]
         },
@@ -194,21 +194,87 @@
                 },
                 {
                     "label": "Four Punches",
-                    "video": "boar_bunch_four.webm"
+                    "video": "boar_punch_four.webm"
                 },
                 {
                     "label": "Four + Heavy",
-                    "video": "boar_bunch_fouruppercut.webm"
+                    "video": "boar_punch_fouruppercut.webm"
                 },
                 {
                     "label": "Two + Heavy",
-                    "video": "boar_bunch_twouppercut.webm"
+                    "video": "boar_punch_twouppercut.webm"
                 },
                 {
                     "label": "Four + 360 Heavy",
-                    "video": "boar_bunch_two360uppercut.webm"
+                    "video": "boar_punch_two360uppercut.webm"
                 }
             ]
+        }
+    ],
+    "Wolf": [
+        {
+            "name": "Frenzy Swipes Heavy",
+            "heavy": "Heavy",
+            "range": "Melee",
+            "type": "Slash",
+            "damage": "5760",
+            "video": "wolf_frenzyswipesheavy.webm"
+        },
+        {
+            "name": "Bite",
+            "heavy": "Heavy",
+            "range": "Melee",
+            "type": "Thrust",
+            "damage": "5236",
+            "video": "wolf_bite.webm"
+        },
+        {
+            "name": "Heavy Swipe",
+            "heavy": "Heavy",
+            "range": "Melee",
+            "type": "Slash",
+            "damage": "4713",
+            "video": "wolf_heavyswipe.webm"
+        },
+        {
+            "name": "Circle Slash",
+            "heavy": "Heavy",
+            "range": "Melee",
+            "type": "Slash",
+            "damage": "4713",
+            "video": "wolf_circleslash.webm"
+        },
+        {
+            "name": "Frenzy Swipes Light",
+            "heavy": "Light",
+            "range": "Melee",
+            "type": "Slash",
+            "damage": "3665",
+            "video": "wolf_frenzyswipeslight.webm"
+        },
+        {
+            "name": "Swipe",
+            "heavy": "Light",
+            "range": "Melee",
+            "type": "Slash",
+            "damage": "3142",
+            "video": "wolf_swipe.webm"
+        },
+        {
+            "name": "Feast",
+            "heavy": "Heavy",
+            "range": "Melee",
+            "type": "Thrust",
+            "damage": "2618",
+            "video": "wolf_feast.webm"
+        },
+        {
+            "name": "Bloody Howl",
+            "heavy": "Magic",
+            "range": "Melee",
+            "type": "Nature",
+            "damage": "1047",
+            "video": "wolf_bloodyhowl.webm"
         }
     ]
 }
