@@ -26,7 +26,7 @@
       margin: 20px 0;
     }
     .monster-buttons button {
-      font-size: 1.5em;
+      font-size: 1em;
     }
     .monster-buttons button, .attack-buttons button {
       background: #333;
@@ -245,8 +245,8 @@
         const btn = document.createElement('button');
         btn.innerHTML = `
           <div style="display: flex; align-items: center; gap: 10px;">
-            <img src="${data.icon}" style="height: 30px;">
-            <span style="font-size: 1.5em;">${monster}</span>
+            <img src="icons/${data.icon}" style="height: 30px;">
+            <span style="font-size: 1em;">${monster}</span>
           </div>
         `;
         btn.onclick = () => {

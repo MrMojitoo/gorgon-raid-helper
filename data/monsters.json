@@ -1,13 +1,13 @@
 {
     "Corvid": {
-        "icon": "icons/angryearth.png",
+        "icon": "angryearth.png",
         "attacks": [
             {
                 "name": "Feather Rain",
                 "heavy": "Light",
                 "range": "Ranged",
                 "type": "Thrust",
-                "damage": "3439",
+                "damage": "12916",
                 "video": "corvid_featherrain.webm",
                 "status_effect": "AI_HercyneCorvid_FeatherRain",
                 "status_effect_img": "se_corvid_featherrain.png",
@@ -18,7 +18,7 @@
                 "heavy": "Heavy",
                 "range": "Melee",
                 "type": "Thrust",
-                "damage": "3095",
+                "damage": "11625",
                 "video": "corvid_divebomb.webm"
             },
             {
@@ -26,7 +26,7 @@
                 "heavy": "Light",
                 "range": "Melee",
                 "type": "Slash",
-                "damage": "1032",
+                "damage": "3875",
                 "variants": [
                     {
                         "label": "Left",
@@ -48,7 +48,7 @@
                 "heavy": "Light",
                 "range": "Ranged",
                 "type": "Thrust",
-                "damage": "1032",
+                "damage": "3875",
                 "variants": [
                     {
                         "label": "Left",
@@ -65,220 +65,226 @@
                 "heavy": "Heavy",
                 "range": "Melee",
                 "type": "Nature",
-                "damage": "344",
+                "damage": "1292",
                 "video": "corvid_mistwinds.webm"
             }
         ]
     },
-    "Boar": [
-        {
-            "name": "Charge",
-            "heavy": "Heavy",
-            "range": "Melee",
-            "type": "Thrust",
-            "damage": "6227",
-            "variants": [
-                {
-                    "label": "Just Intro",
-                    "video": "boar_charge_intro.webm"
-                },
-                {
-                    "label": "Intro+Charge+Outro",
-                    "video": "boar_charge.webm"
-                }
-            ]
-        },
-        {
-            "name": "Gore Back",
-            "heavy": "Heavy",
-            "range": "Melee",
-            "type": "Thrust",
-            "damage": "4982",
-            "video": "boar_goreback.webm"
-        },
-        {
-            "name": "Slam",
-            "heavy": "Heavy",
-            "range": "Melee",
-            "type": "Strike",
-            "damage": "4359",
-            "variants": [
-                {
-                    "label": "Overhead",
-                    "video": "boar_slam_overhead.webm"
-                },
-                {
-                    "label": "Punch Slam Combo",
-                    "video": "boar_slam_punchcombo.webm"
-                }
-            ]
-        },
-        {
-            "name": "Thorne Explode Back",
-            "heavy": "Magic",
-            "range": "Melee",
-            "type": "Nature",
-            "damage": "3736",
-            "variants": [
-                {
-                    "label": "Thorne Hide",
-                    "video": "boar_thorne_hide.webm"
-                },
-                {
-                    "label": "Thorne Explode",
-                    "video": "boar_thorne_explode.webm"
-                }
-            ]
-        },
-        {
-            "name": "Headbutt",
-            "heavy": "Heavy",
-            "range": "Melee",
-            "type": "Strike",
-            "damage": "3114",
-            "video": "boar_headbutt.webm"
-        },
-        {
-            "name": "Punch Heavy",
-            "heavy": "Heavy",
-            "range": "Melee",
-            "type": "Strike",
-            "damage": "2802",
-            "variants": [
-                {
-                    "label": "Four + Heavy",
-                    "video": "boar_punch_fouruppercut.webm"
-                },
-                {
-                    "label": "Two + Heavy",
-                    "video": "boar_punch_twouppercut.webm"
-                },
-                {
-                    "label": "Four + 360 Heavy",
-                    "video": "boar_punch_two360uppercut.webm"
-                }
-            ]
-        },
-        {
-            "name": "Thorne Explode Front",
-            "heavy": "Magic",
-            "range": "Melee",
-            "type": "Nature",
-            "damage": "2491",
-            "variants": [
-                {
-                    "label": "Thorne Hide",
-                    "video": "boar_thorne_hide.webm"
-                },
-                {
-                    "label": "Thorne Explode",
-                    "video": "boar_thorne_explode.webm"
-                }
-            ]
-        },
-        {
-            "name": "Punch",
-            "heavy": "Light",
-            "range": "Melee",
-            "type": "Strike",
-            "damage": "1868",
-            "variants": [
-                {
-                    "label": "Left Right",
-                    "video": "boar_punch_leftright.webm"
-                },
-                {
-                    "label": "Right Left",
-                    "video": "boar_punch_rightleft.webm"
-                },
-                {
-                    "label": "Punch Slam Combo",
-                    "video": "boar_slam_punchcombo.webm"
-                },
-                {
-                    "label": "Four Punches",
-                    "video": "boar_punch_four.webm"
-                },
-                {
-                    "label": "Four + Heavy",
-                    "video": "boar_punch_fouruppercut.webm"
-                },
-                {
-                    "label": "Two + Heavy",
-                    "video": "boar_punch_twouppercut.webm"
-                },
-                {
-                    "label": "Four + 360 Heavy",
-                    "video": "boar_punch_two360uppercut.webm"
-                }
-            ]
-        }
-    ],
-    "Wolf": [
-        {
-            "name": "Frenzy Swipes Heavy",
-            "heavy": "Heavy",
-            "range": "Melee",
-            "type": "Slash",
-            "damage": "5760",
-            "video": "wolf_frenzyswipesheavy.webm"
-        },
-        {
-            "name": "Bite",
-            "heavy": "Heavy",
-            "range": "Melee",
-            "type": "Thrust",
-            "damage": "5236",
-            "video": "wolf_bite.webm"
-        },
-        {
-            "name": "Heavy Swipe",
-            "heavy": "Heavy",
-            "range": "Melee",
-            "type": "Slash",
-            "damage": "4713",
-            "video": "wolf_heavyswipe.webm"
-        },
-        {
-            "name": "Circle Slash",
-            "heavy": "Heavy",
-            "range": "Melee",
-            "type": "Slash",
-            "damage": "4713",
-            "video": "wolf_circleslash.webm"
-        },
-        {
-            "name": "Frenzy Swipes Light",
-            "heavy": "Light",
-            "range": "Melee",
-            "type": "Slash",
-            "damage": "3665",
-            "video": "wolf_frenzyswipeslight.webm"
-        },
-        {
-            "name": "Swipe",
-            "heavy": "Light",
-            "range": "Melee",
-            "type": "Slash",
-            "damage": "3142",
-            "video": "wolf_swipe.webm"
-        },
-        {
-            "name": "Feast",
-            "heavy": "Heavy",
-            "range": "Melee",
-            "type": "Thrust",
-            "damage": "2618",
-            "video": "wolf_feast.webm"
-        },
-        {
-            "name": "Bloody Howl",
-            "heavy": "Magic",
-            "range": "Melee",
-            "type": "Nature",
-            "damage": "1047",
-            "video": "wolf_bloodyhowl.webm"
-        }
-    ]
+    "Boar": {
+        "icon": "angryearth.png",
+        "attacks": [
+            {
+                "name": "Charge",
+                "heavy": "Heavy",
+                "range": "Melee",
+                "type": "Thrust",
+                "damage": "12916",
+                "variants": [
+                    {
+                        "label": "Just Intro",
+                        "video": "boar_charge_intro.webm"
+                    },
+                    {
+                        "label": "Intro+Charge+Outro",
+                        "video": "boar_charge.webm"
+                    }
+                ]
+            },
+            {
+                "name": "Gore Back",
+                "heavy": "Heavy",
+                "range": "Melee",
+                "type": "Thrust",
+                "damage": "10333",
+                "video": "boar_goreback.webm"
+            },
+            {
+                "name": "Slam",
+                "heavy": "Heavy",
+                "range": "Melee",
+                "type": "Strike",
+                "damage": "9042",
+                "variants": [
+                    {
+                        "label": "Overhead",
+                        "video": "boar_slam_overhead.webm"
+                    },
+                    {
+                        "label": "Punch Slam Combo",
+                        "video": "boar_slam_punchcombo.webm"
+                    }
+                ]
+            },
+            {
+                "name": "Thorne Explode Back",
+                "heavy": "Magic",
+                "range": "Melee",
+                "type": "Nature",
+                "damage": "7750",
+                "variants": [
+                    {
+                        "label": "Thorne Hide",
+                        "video": "boar_thorne_hide.webm"
+                    },
+                    {
+                        "label": "Thorne Explode",
+                        "video": "boar_thorne_explode.webm"
+                    }
+                ]
+            },
+            {
+                "name": "Headbutt",
+                "heavy": "Heavy",
+                "range": "Melee",
+                "type": "Strike",
+                "damage": "6458",
+                "video": "boar_headbutt.webm"
+            },
+            {
+                "name": "Punch Heavy",
+                "heavy": "Heavy",
+                "range": "Melee",
+                "type": "Strike",
+                "damage": "5812",
+                "variants": [
+                    {
+                        "label": "Four + Heavy",
+                        "video": "boar_punch_fouruppercut.webm"
+                    },
+                    {
+                        "label": "Two + Heavy",
+                        "video": "boar_punch_twouppercut.webm"
+                    },
+                    {
+                        "label": "Four + 360 Heavy",
+                        "video": "boar_punch_two360uppercut.webm"
+                    }
+                ]
+            },
+            {
+                "name": "Thorne Explode Front",
+                "heavy": "Magic",
+                "range": "Melee",
+                "type": "Nature",
+                "damage": "5167",
+                "variants": [
+                    {
+                        "label": "Thorne Hide",
+                        "video": "boar_thorne_hide.webm"
+                    },
+                    {
+                        "label": "Thorne Explode",
+                        "video": "boar_thorne_explode.webm"
+                    }
+                ]
+            },
+            {
+                "name": "Punch",
+                "heavy": "Light",
+                "range": "Melee",
+                "type": "Strike",
+                "damage": "3875",
+                "variants": [
+                    {
+                        "label": "Left Right",
+                        "video": "boar_punch_leftright.webm"
+                    },
+                    {
+                        "label": "Right Left",
+                        "video": "boar_punch_rightleft.webm"
+                    },
+                    {
+                        "label": "Punch Slam Combo",
+                        "video": "boar_slam_punchcombo.webm"
+                    },
+                    {
+                        "label": "Four Punches",
+                        "video": "boar_punch_four.webm"
+                    },
+                    {
+                        "label": "Four + Heavy",
+                        "video": "boar_punch_fouruppercut.webm"
+                    },
+                    {
+                        "label": "Two + Heavy",
+                        "video": "boar_punch_twouppercut.webm"
+                    },
+                    {
+                        "label": "Four + 360 Heavy",
+                        "video": "boar_punch_two360uppercut.webm"
+                    }
+                ]
+            }
+        ]
+    },
+    "Wolf": {
+        "icon": "angryearth.png",
+        "attacks": [
+            {
+                "name": "Frenzy Swipes Heavy",
+                "heavy": "Heavy",
+                "range": "Melee",
+                "type": "Slash",
+                "damage": "7104",
+                "video": "wolf_frenzyswipesheavy.webm"
+            },
+            {
+                "name": "Bite",
+                "heavy": "Heavy",
+                "range": "Melee",
+                "type": "Thrust",
+                "damage": "6458",
+                "video": "wolf_bite.webm"
+            },
+            {
+                "name": "Heavy Swipe",
+                "heavy": "Heavy",
+                "range": "Melee",
+                "type": "Slash",
+                "damage": "5812",
+                "video": "wolf_heavyswipe.webm"
+            },
+            {
+                "name": "Circle Slash",
+                "heavy": "Heavy",
+                "range": "Melee",
+                "type": "Slash",
+                "damage": "5812",
+                "video": "wolf_circleslash.webm"
+            },
+            {
+                "name": "Frenzy Swipes Light",
+                "heavy": "Light",
+                "range": "Melee",
+                "type": "Slash",
+                "damage": "4521",
+                "video": "wolf_frenzyswipeslight.webm"
+            },
+            {
+                "name": "Swipe",
+                "heavy": "Light",
+                "range": "Melee",
+                "type": "Slash",
+                "damage": "3875",
+                "video": "wolf_swipe.webm"
+            },
+            {
+                "name": "Feast",
+                "heavy": "Heavy",
+                "range": "Melee",
+                "type": "Thrust",
+                "damage": "3229",
+                "video": "wolf_feast.webm"
+            },
+            {
+                "name": "Bloody Howl",
+                "heavy": "Magic",
+                "range": "Melee",
+                "type": "Nature",
+                "damage": "1292",
+                "video": "wolf_bloodyhowl.webm"
+            }
+        ]
+    }
 }
   
