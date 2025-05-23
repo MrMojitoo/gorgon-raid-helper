@@ -2,9 +2,10 @@
     "Corvid": [
       {
         "name": "Dive Bomb",
-        "type": "physique",
-        "range": "distance",
-        "damage": "élevé",
+        "type": "Slash",
+        "range": "Melee",
+        "damage": "3095",
+        "Heavy": "Heavy",
         "video": "corvid_divebomb.webm"
       }
     ]
