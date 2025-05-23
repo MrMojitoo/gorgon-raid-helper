@@ -6,7 +6,10 @@
             "range": "Ranged",
             "type": "Thrust",
             "damage": "3439",
-            "video": "corvid_featherrain.webm"
+            "video": "corvid_featherrain.webm",
+            "status_effect": "AI_HercyneCorvid_FeatherRain",
+            "status_effect_img": "se_corvid_featherrain.png",
+            "status_effect_desc": "Applies 10% attack damage Thrust DoT on the ground that ticks every 0.2s for 1s (doesn't stack)"
         },
         {
             "name": "Dive Bomb",

@@ -33,7 +33,7 @@
       cursor: pointer;
       border-radius: 5px;
       transition: background 0.3s;
-      text-align: left;
+      text-align: center;
     }
     .monster-buttons button:hover, .attack-buttons button:hover {
       background: #555;
@@ -126,6 +126,28 @@
       font-weight: bold;
       margin-bottom: 10px;
     }
+    .attack-meta {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 5px;
+    }
+    .status-effect {
+      background: #444;
+      padding: 10px;
+      margin-top: 15px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 15px;
+    }
+    .status-effect img {
+      width: 50px;
+      height: 50px;
+    }
+    .status-effect-desc {
+      max-width: 400px;
+    }
   </style>
 </head>
 <body>
@@ -199,9 +221,11 @@
         const heavySpan = `<span class="${attack.heavy}">${attack.heavy}</span>`;
 
         btn.innerHTML = `
-          <strong>${attack.name}</strong><br>
-          ${attack.damage} <img src="${iconPath}" style="width: 20px; vertical-align: middle;">
-          ${typeSpan} ${rangeSpan} ${heavySpan}
+          <div><strong>${attack.name}</strong></div>
+          <div class="attack-meta">
+            ${attack.damage} <img src="${iconPath}" style="width: 20px; vertical-align: middle;">
+            ${typeSpan} ${rangeSpan} ${heavySpan}
+          </div>
         `;
         btn.onclick = () => {
           document.querySelectorAll('.attack-buttons button').forEach(b => b.classList.remove('selected'));
@@ -217,13 +241,25 @@
       const typeSpan = `<span class="type ${attack.type}">${attack.type}</span>`;
       const rangeSpan = `<span class="${attack.range === 'Ranged' ? 'ranged' : 'melee'}">${attack.range}</span>`;
       const heavySpan = `<span class="${attack.heavy}">${attack.heavy}</span>`;
+
+      let statusEffectHTML = '';
+      if (attack.status_effect) {
+        statusEffectHTML = `
+          <div class="status-effect">
+            <div><strong>Status Effect applied on hit</strong></div>
+            <img src="${attack.status_effect_img}" alt="Status Icon">
+            <div class="status-effect-desc">${attack.status_effect_desc}</div>
+          </div>`;
+      }
+
       attackInfo.innerHTML = `
         <div class="attack-name">${attack.name}</div>
-        <div>
+        <div class="attack-meta">
           ${attack.damage} <img src="${iconPath}" style="width: 24px; vertical-align: middle;">
           ${typeSpan} ${rangeSpan} ${heavySpan}
         </div>
         <video autoplay loop muted src="videos/${attack.video}" type="video/webm"></video>
+        ${statusEffectHTML}
       `;
     }
 
