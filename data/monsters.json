@@ -74,7 +74,16 @@
             "range": "Melee",
             "type": "Thrust",
             "damage": "6227",
-            "video": "boar_charge.webm"
+            "variants": [
+                {
+                    "label": "Just Intro",
+                    "video": "boar_charge_intro.webm"
+                },
+                {
+                    "label": "Intro+Charge+Outro",
+                    "video": "boar_charge.webm"
+                }
+            ]
         },
         {
             "name": "Gore Back",
@@ -90,7 +99,16 @@
             "range": "Melee",
             "type": "Strike",
             "damage": "4359",
-            "video": "boar_slam.webm"
+            "variants": [
+                {
+                    "label": "Overhead",
+                    "video": "boar_slam_overhead.webm"
+                },
+                {
+                    "label": "Punch Slam Combo",
+                    "video": "boar_slam_punchcombo.webm"
+                }
+            ]
         },
         {
             "name": "Thorne Explode Back",
@@ -98,7 +116,16 @@
             "range": "Melee",
             "type": "Nature",
             "damage": "3736",
-            "video": "boar_thorneexplodeback.webm"
+            "variants": [
+                {
+                    "label": "Thorne Hide",
+                    "video": "boar_thorne_hide.webm"
+                },
+                {
+                    "label": "Thorne Explode",
+                    "video": "boar_thorne_explode.webm"
+                }
+            ]
         },
         {
             "name": "Headbutt",
@@ -114,7 +141,20 @@
             "range": "Melee",
             "type": "Strike",
             "damage": "2802",
-            "video": "boar_punchheavy.webm"
+            "variants": [
+                {
+                    "label": "Four + Heavy",
+                    "video": "boar_bunch_fouruppercut.webm"
+                },
+                {
+                    "label": "Two + Heavy",
+                    "video": "boar_bunch_twouppercut.webm"
+                },
+                {
+                    "label": "Four + 360 Heavy",
+                    "video": "boar_bunch_two360uppercut.webm"
+                }
+            ]
         },
         {
             "name": "Thorne Explode Front",
@@ -122,7 +162,16 @@
             "range": "Melee",
             "type": "Nature",
             "damage": "2491",
-            "video": "boar_thorneexplodefront.webm"
+            "variants": [
+                {
+                    "label": "Thorne Hide",
+                    "video": "boar_thorne_hide.webm"
+                },
+                {
+                    "label": "Thorne Explode",
+                    "video": "boar_thorne_explode.webm"
+                }
+            ]
         },
         {
             "name": "Punch",
@@ -130,7 +179,36 @@
             "range": "Melee",
             "type": "Strike",
             "damage": "1868",
-            "video": "boar_punch.webm"
+            "variants": [
+                {
+                    "label": "Left Right",
+                    "video": "boar_punch_leftright.webm"
+                },
+                {
+                    "label": "Right Left",
+                    "video": "boar_punch_rightleft.webm"
+                },
+                {
+                    "label": "Punch Slam Combo",
+                    "video": "boar_slam_punchcombo.webm"
+                },
+                {
+                    "label": "Four Punches",
+                    "video": "boar_bunch_four.webm"
+                },
+                {
+                    "label": "Four + Heavy",
+                    "video": "boar_bunch_fouruppercut.webm"
+                },
+                {
+                    "label": "Two + Heavy",
+                    "video": "boar_bunch_twouppercut.webm"
+                },
+                {
+                    "label": "Four + 360 Heavy",
+                    "video": "boar_bunch_two360uppercut.webm"
+                }
+            ]
         }
     ]
 }
