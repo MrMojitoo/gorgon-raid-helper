@@ -266,15 +266,27 @@
       const rangeSpan = `<span class="${attack.range === 'Ranged' ? 'ranged' : 'melee'}">${attack.range}</span>`;
       const heavySpan = `<span class="${attack.heavy}">${attack.heavy}</span>`;
 
+      let videoHTML = '';
+      if (attack.variants) {
+        videoHTML = attack.variants.map(v => `
+          <div style="display: inline-block; margin: 10px; text-align: center;">
+            <div><strong>${v.label}</strong></div>
+            <video autoplay loop muted src="videos/${v.video}" type="video/webm" style="border-radius: 10px; max-width: 300px;"></video>
+          </div>
+        `).join('');
+      } else {
+        videoHTML = `
+          <video autoplay loop muted src="videos/${attack.video}" type="video/webm" style="border-radius: 10px;"></video>
+        `;
+      }
+
       let statusEffectHTML = '';
       if (attack.status_effect) {
         statusEffectHTML = `
           <div class="status-effect">
-            <h3>Status Effect applied on hit</h3>
-            <div class="status-effect-content">
-              <img src="se_images/${attack.status_effect_img}" alt="Status Effect Image">
-              <div class="status-effect-desc">${attack.status_effect_desc}</div>
-            </div>
+            <div><strong>Status Effect applied on hit</strong></div>
+            <img src="${attack.status_effect_img}" alt="Status Icon">
+            <div class="status-effect-desc">${attack.status_effect_desc}</div>
           </div>`;
       }
 
@@ -284,10 +296,11 @@
           ${attack.damage} <img src="${iconPath}" style="width: 24px; vertical-align: middle;">
           ${typeSpan} ${rangeSpan} ${heavySpan}
         </div>
-        <video autoplay loop muted src="videos/${attack.video}" type="video/webm"></video>
+        ${videoHTML}
         ${statusEffectHTML}
       `;
     }
+
 
     // --- RAIDPLAN ---
     const canvas = document.getElementById('canvas');

@@ -25,7 +25,21 @@
             "range": "Melee",
             "type": "Slash",
             "damage": "1032",
-            "video": "corvid_swipe.webm"
+            "variants": [
+                {
+                    "label": "Left",
+                    "video": "corvid_swipe_left.webm"
+                },
+                {
+                    "label": "Right",
+                    "video": "corvid_swipe_right.webm"
+                },
+                {
+                    
+                    "label": "Combo",
+                    "video": "corvid_swipe_combo.webm"
+                }
+            ]
         },
         {
             "name": "Feather Shot",
@@ -46,12 +60,68 @@
     ],
     "Boar": [
         {
-            "name": "Dive Bomb",
-            "type": "Slash",
-            "range": "Melee",
-            "damage": "3095",
+            "name": "Charge",
             "heavy": "Heavy",
-            "video": "corvid_divebomb.webm"
+            "range": "Melee",
+            "type": "Thrust",
+            "damage": "6227",
+            "video": "boar_charge.webm"
+        },
+        {
+            "name": "Gore Back",
+            "heavy": "Heavy",
+            "range": "Melee",
+            "type": "Thrust",
+            "damage": "4982",
+            "video": "boar_goreback.webm"
+        },
+        {
+            "name": "Slam",
+            "heavy": "Heavy",
+            "range": "Melee",
+            "type": "Strike",
+            "damage": "4359",
+            "video": "boar_slam.webm"
+        },
+        {
+            "name": "Thorne Explode Back",
+            "heavy": "Magic",
+            "range": "Melee",
+            "type": "Nature",
+            "damage": "3736",
+            "video": "boar_thorneexplodeback.webm"
+        },
+        {
+            "name": "Headbutt",
+            "heavy": "Heavy",
+            "range": "Melee",
+            "type": "Strike",
+            "damage": "3114",
+            "video": "boar_headbutt.webm"
+        },
+        {
+            "name": "Punch Heavy",
+            "heavy": "Heavy",
+            "range": "Melee",
+            "type": "Strike",
+            "damage": "2802",
+            "video": "boar_punchheavy.webm"
+        },
+        {
+            "name": "Thorne Explode Front",
+            "heavy": "Magic",
+            "range": "Melee",
+            "type": "Nature",
+            "damage": "2491",
+            "video": "boar_thorneexplodefront.webm"
+        },
+        {
+            "name": "Punch",
+            "heavy": "Light",
+            "range": "Melee",
+            "type": "Strike",
+            "damage": "1868",
+            "video": "boar_punch.webm"
         }
     ]
 }
