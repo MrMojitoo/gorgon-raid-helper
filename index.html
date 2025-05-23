@@ -284,9 +284,11 @@
       if (attack.status_effect) {
         statusEffectHTML = `
           <div class="status-effect">
-            <div><strong>Status Effect applied on hit</strong></div>
-            <img src="${attack.status_effect_img}" alt="Status Icon">
-            <div class="status-effect-desc">${attack.status_effect_desc}</div>
+            <h3>Status Effect applied on hit</h3>
+            <div class="status-effect-content">
+              <img src="se_images/${attack.status_effect_img}" alt="Status Effect Image">
+              <div class="status-effect-desc">${attack.status_effect_desc}</div>
+            </div>
           </div>`;
       }
 
