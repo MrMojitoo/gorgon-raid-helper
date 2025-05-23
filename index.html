@@ -241,9 +241,14 @@
     const attackInfo = document.getElementById('attackInfo');
 
     function populateMonsterButtons() {
-      Object.keys(monsters).forEach(monster => {
+      Object.entries(monsters).forEach(([monster, data]) => {
         const btn = document.createElement('button');
-        btn.textContent = monster;
+        btn.innerHTML = `
+          <div style="display: flex; align-items: center; gap: 10px;">
+            <img src="${data.icon}" style="height: 30px;">
+            <span style="font-size: 1.5em;">${monster}</span>
+          </div>
+        `;
         btn.onclick = () => {
           document.querySelectorAll('.monster-buttons button').forEach(b => b.classList.remove('selected'));
           btn.classList.add('selected');
@@ -253,10 +258,11 @@
       });
     }
 
+
     function loadAttacks(monster) {
       attackButtons.innerHTML = '';
       attackInfo.innerHTML = '';
-      (monsters[monster] || []).forEach(attack => {
+      (monsters[monster].attacks || []).forEach(attack => {
         const btn = document.createElement('button');
         const iconPath = `icons/${attack.type.toLowerCase()}.png`;
         const typeSpan = `<span class="type ${attack.type}">${attack.type}</span>`;

@@ -1,72 +1,75 @@
 {
-    "Corvid": [
-        {
-            "name": "Feather Rain",
-            "heavy": "Light",
-            "range": "Ranged",
-            "type": "Thrust",
-            "damage": "3439",
-            "video": "corvid_featherrain.webm",
-            "status_effect": "AI_HercyneCorvid_FeatherRain",
-            "status_effect_img": "se_corvid_featherrain.png",
-            "status_effect_desc": "Applies 10% attack damage Thrust DoT on the ground that ticks every 0.2s for 1s (doesn't stack)"
-        },
-        {
-            "name": "Dive Bomb",
-            "heavy": "Heavy",
-            "range": "Melee",
-            "type": "Thrust",
-            "damage": "3095",
-            "video": "corvid_divebomb.webm"
-        },
-        {
-            "name": "Swipe",
-            "heavy": "Light",
-            "range": "Melee",
-            "type": "Slash",
-            "damage": "1032",
-            "variants": [
-                {
-                    "label": "Left",
-                    "video": "corvid_swipe_left.webm"
-                },
-                {
-                    "label": "Right",
-                    "video": "corvid_swipe_right.webm"
-                },
-                {
-                    
-                    "label": "Combo",
-                    "video": "corvid_swipe_combo.webm"
-                }
-            ]
-        },
-        {
-            "name": "Feather Shot",
-            "heavy": "Light",
-            "range": "Ranged",
-            "type": "Thrust",
-            "damage": "1032",
-            "variants": [
-                {
-                    "label": "Left",
-                    "video": "corvid_feathershot_left.webm"
-                },
-                {
-                    "label": "Right",
-                    "video": "corvid_feathershot_right.webm"
-                }
-            ]
-        },
-        {
-            "name": "Mist Winds",
-            "heavy": "Heavy",
-            "range": "Melee",
-            "type": "Nature",
-            "damage": "344",
-            "video": "corvid_mistwinds.webm"
-        }
-    ],
+    "Corvid": {
+        "icon": "icons/angryearth.png",
+        "attacks": [
+            {
+                "name": "Feather Rain",
+                "heavy": "Light",
+                "range": "Ranged",
+                "type": "Thrust",
+                "damage": "3439",
+                "video": "corvid_featherrain.webm",
+                "status_effect": "AI_HercyneCorvid_FeatherRain",
+                "status_effect_img": "se_corvid_featherrain.png",
+                "status_effect_desc": "Applies 10% attack damage Thrust DoT on the ground that ticks every 0.2s for 1s (doesn't stack)"
+            },
+            {
+                "name": "Dive Bomb",
+                "heavy": "Heavy",
+                "range": "Melee",
+                "type": "Thrust",
+                "damage": "3095",
+                "video": "corvid_divebomb.webm"
+            },
+            {
+                "name": "Swipe",
+                "heavy": "Light",
+                "range": "Melee",
+                "type": "Slash",
+                "damage": "1032",
+                "variants": [
+                    {
+                        "label": "Left",
+                        "video": "corvid_swipe_left.webm"
+                    },
+                    {
+                        "label": "Right",
+                        "video": "corvid_swipe_right.webm"
+                    },
+                    {
+                        
+                        "label": "Combo",
+                        "video": "corvid_swipe_combo.webm"
+                    }
+                ]
+            },
+            {
+                "name": "Feather Shot",
+                "heavy": "Light",
+                "range": "Ranged",
+                "type": "Thrust",
+                "damage": "1032",
+                "variants": [
+                    {
+                        "label": "Left",
+                        "video": "corvid_feathershot_left.webm"
+                    },
+                    {
+                        "label": "Right",
+                        "video": "corvid_feathershot_right.webm"
+                    }
+                ]
+            },
+            {
+                "name": "Mist Winds",
+                "heavy": "Heavy",
+                "range": "Melee",
+                "type": "Nature",
+                "damage": "344",
+                "video": "corvid_mistwinds.webm"
+            }
+        ]
+    },
     "Boar": [
         {
             "name": "Charge",
