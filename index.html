@@ -53,11 +53,10 @@
       border: 2px solid #444;
       position: relative;
     }
-    #canvas {
+    canvas, #bgCanvas {
       position: absolute;
       top: 0;
       left: 0;
-      z-index: 10;
     }
     #tools {
       display: flex;
@@ -73,12 +72,6 @@
       width: 40px;
       margin: 5px;
       cursor: grab;
-    }
-    #icon-layer {
-      position: absolute;
-      top: 0;
-      left: 0;
-      z-index: 5;
     }
   </style>
 </head>
@@ -99,11 +92,12 @@
     <label>Estomper: <input type="checkbox" id="fadeCheckbox"> après <input type="number" id="fadeTime" min="1" value="5"> s</label>
     <button onclick="clearCanvas()">Effacer</button>
     <button onclick="saveImage()">Sauvegarder</button>
+    <select id="imageSelect"></select>
     <input type="file" accept="image/*" onchange="setBackground(event)">
   </div>
 
   <div id="raidplan">
-    <img id="background" style="width:100%;" />
+    <canvas id="bgCanvas"></canvas>
     <canvas id="icon-layer"></canvas>
     <canvas id="canvas"></canvas>
   </div>
@@ -112,36 +106,30 @@
     <img src="icons/tank.png" draggable="true" ondragstart="startDrag(event)">
     <img src="icons/dps.png" draggable="true" ondragstart="startDrag(event)">
     <img src="icons/heal.png" draggable="true" ondragstart="startDrag(event)">
-    <!-- Ajoute plus d'icônes selon besoin -->
   </div>
 
   <script>
-    const monsters = {
-      "Corvid": [
-        { name: "Dive Bomb", type: "Melee", range: "Close", damage: "High", video: "videos/corvid_divebomb.mp4" },
-        { name: "Feather Rain", type: "Ranged", range: "Long", damage: "Medium", video: "videos/corvid_featherrain.mp4" },
-        { name: "Feather Shot Left", type: "Ranged", range: "Mid", damage: "Low", video: "videos/corvid_shotleft.mp4" },
-        { name: "Feather Shot Right", type: "Ranged", range: "Mid", damage: "Low", video: "videos/corvid_shotright.mp4" },
-        { name: "Swipe Left", type: "Melee", range: "Close", damage: "Medium", video: "videos/corvid_swipeleft.mp4" },
-        { name: "Swipe Right", type: "Melee", range: "Close", damage: "Medium", video: "videos/corvid_swiperight.mp4" },
-        { name: "Dash Left", type: "Melee", range: "Charge", damage: "High", video: "videos/corvid_dashleft.mp4" },
-        { name: "Dash Right", type: "Melee", range: "Charge", damage: "High", video: "videos/corvid_dashright.mp4" },
-      ],
-      // Ajoute ici les autres monstres et leurs attaques...
-    };
+    let monsters = {};
 
-    const monsterList = ["Echidna", "Typhon", "Medusa", "Boar", "Corvid", "Reindeer", "Wolf", "Spider", "Elephant", "Gorilla", "Rat"];
+    fetch('data/monsters.json')
+      .then(res => res.json())
+      .then(data => {
+        monsters = data;
+        populateMonsterButtons();
+      });
 
     const monsterButtons = document.getElementById('monsterButtons');
     const attackButtons = document.getElementById('attackButtons');
     const attackInfo = document.getElementById('attackInfo');
 
-    monsterList.forEach(monster => {
-      const btn = document.createElement('button');
-      btn.textContent = monster;
-      btn.onclick = () => loadAttacks(monster);
-      monsterButtons.appendChild(btn);
-    });
+    function populateMonsterButtons() {
+      Object.keys(monsters).forEach(monster => {
+        const btn = document.createElement('button');
+        btn.textContent = monster;
+        btn.onclick = () => loadAttacks(monster);
+        monsterButtons.appendChild(btn);
+      });
+    }
 
     function loadAttacks(monster) {
       attackButtons.innerHTML = '';
@@ -160,28 +148,36 @@
         <p>Type: ${attack.type}</p>
         <p>Portée: ${attack.range}</p>
         <p>Dégâts: ${attack.damage}</p>
-        <video autoplay loop muted src="${attack.video}"></video>
+        <video autoplay loop muted src="videos/${attack.video}"></video>
       `;
     }
 
     // --- RAIDPLAN ---
     const canvas = document.getElementById('canvas');
     const iconLayer = document.getElementById('icon-layer');
+    const bgCanvas = document.getElementById('bgCanvas');
     const ctx = canvas.getContext('2d');
+    const bgCtx = bgCanvas.getContext('2d');
     let drawing = false;
 
     function resizeCanvases() {
       const rect = document.getElementById('raidplan').getBoundingClientRect();
-      [canvas, iconLayer].forEach(c => {
+      [canvas, iconLayer, bgCanvas].forEach(c => {
         c.width = rect.width;
         c.height = rect.height;
       });
     }
 
     window.addEventListener('resize', resizeCanvases);
-    window.addEventListener('load', resizeCanvases);
+    window.addEventListener('load', () => {
+      resizeCanvases();
+      loadImageOptions();
+    });
 
-    canvas.addEventListener('mousedown', () => drawing = true);
+    canvas.addEventListener('mousedown', () => {
+      drawing = true;
+      ctx.beginPath();
+    });
     canvas.addEventListener('mouseup', () => drawing = false);
     canvas.addEventListener('mousemove', draw);
 
@@ -205,6 +201,7 @@
     function clearCanvas() {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       iconLayer.getContext('2d').clearRect(0, 0, iconLayer.width, iconLayer.height);
+      bgCtx.clearRect(0, 0, bgCanvas.width, bgCanvas.height);
     }
 
     function saveImage() {
@@ -212,7 +209,7 @@
       composite.width = canvas.width;
       composite.height = canvas.height;
       const cx = composite.getContext('2d');
-      cx.drawImage(document.getElementById('background'), 0, 0, canvas.width, canvas.height);
+      cx.drawImage(bgCanvas, 0, 0);
       cx.drawImage(iconLayer, 0, 0);
       cx.drawImage(canvas, 0, 0);
       const link = document.createElement('a');
@@ -223,8 +220,37 @@
 
     function setBackground(e) {
       const reader = new FileReader();
-      reader.onload = () => document.getElementById('background').src = reader.result;
+      reader.onload = () => {
+        const img = new Image();
+        img.onload = () => {
+          bgCtx.clearRect(0, 0, bgCanvas.width, bgCanvas.height);
+          bgCtx.drawImage(img, 0, 0, bgCanvas.width, bgCanvas.height);
+        };
+        img.src = reader.result;
+      };
       reader.readAsDataURL(e.target.files[0]);
+    }
+
+    function loadImageOptions() {
+      fetch('images/images.json')
+        .then(res => res.json())
+        .then(images => {
+          const select = document.getElementById('imageSelect');
+          images.forEach(name => {
+            const option = document.createElement('option');
+            option.value = name;
+            option.textContent = name;
+            select.appendChild(option);
+          });
+          select.onchange = () => {
+            const img = new Image();
+            img.onload = () => {
+              bgCtx.clearRect(0, 0, bgCanvas.width, bgCanvas.height);
+              bgCtx.drawImage(img, 0, 0, bgCanvas.width, bgCanvas.height);
+            };
+            img.src = 'images/' + select.value;
+          };
+        });
     }
 
     function startDrag(e) {

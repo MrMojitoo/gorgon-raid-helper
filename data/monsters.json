@@ -1,0 +1,12 @@
+{
+    "Corvid": [
+      {
+        "name": "Dive Bomb",
+        "type": "physique",
+        "range": "distance",
+        "damage": "élevé",
+        "video": "corvid_divebomb.mp4"
+      }
+    ]
+}
+  
