@@ -32,9 +32,13 @@
       padding: 10px 15px;
       cursor: pointer;
       border-radius: 5px;
+      transition: background 0.3s;
     }
     .monster-buttons button:hover, .attack-buttons button:hover {
       background: #555;
+    }
+    .monster-buttons button.selected, .attack-buttons button.selected {
+      background: #006400;
     }
     .attack-info {
       text-align: center;
@@ -72,6 +76,53 @@
       width: 40px;
       margin: 5px;
       cursor: grab;
+    }
+    .type {
+      padding: 2px 6px;
+      border-radius: 5px;
+    }
+    .Slash { color: white; }
+    .Thrust { color: lightgreen; }
+    .Strike { color: darkred; }
+    .Nature { color: goldenrod; }
+    .Fire { color: red; }
+    .Ice { color: lightblue; }
+    .Void { color: pink; }
+    .Lightning { color: yellow; }
+    .Arcane { color: #66f; }
+    .ranged {
+      background: navy;
+      color: lightblue;
+      padding: 2px 6px;
+      border-radius: 5px;
+    }
+    .melee {
+      background: yellow;
+      color: orange;
+      padding: 2px 6px;
+      border-radius: 5px;
+    }
+    .Heavy {
+      background: darkred;
+      color: lightcoral;
+      padding: 2px 6px;
+      border-radius: 5px;
+    }
+    .Light {
+      background: darkgreen;
+      color: lightgreen;
+      padding: 2px 6px;
+      border-radius: 5px;
+    }
+    .Magic {
+      background: purple;
+      color: violet;
+      padding: 2px 6px;
+      border-radius: 5px;
+    }
+    .attack-name {
+      font-size: 1.5em;
+      margin-bottom: 10px;
     }
   </style>
 </head>
@@ -126,7 +177,11 @@
       Object.keys(monsters).forEach(monster => {
         const btn = document.createElement('button');
         btn.textContent = monster;
-        btn.onclick = () => loadAttacks(monster);
+        btn.onclick = () => {
+          document.querySelectorAll('.monster-buttons button').forEach(b => b.classList.remove('selected'));
+          btn.classList.add('selected');
+          loadAttacks(monster);
+        };
         monsterButtons.appendChild(btn);
       });
     }
@@ -137,18 +192,26 @@
       (monsters[monster] || []).forEach(attack => {
         const btn = document.createElement('button');
         btn.textContent = attack.name;
-        btn.onclick = () => showAttackInfo(attack);
+        btn.onclick = () => {
+          document.querySelectorAll('.attack-buttons button').forEach(b => b.classList.remove('selected'));
+          btn.classList.add('selected');
+          showAttackInfo(attack);
+        };
         attackButtons.appendChild(btn);
       });
     }
 
     function showAttackInfo(attack) {
+      const iconPath = `icons/${attack.type.toLowerCase()}.png`;
       attackInfo.innerHTML = `
-        <h3>${attack.name}</h3>
-        <p>Type: ${attack.type}</p>
-        <p>Portée: ${attack.range}</p>
-        <p>Dégâts: ${attack.damage}</p>
-        <video autoplay loop muted src="videos/${attack.video}"></video>
+        <div class="attack-name">${attack.name}</div>
+        <div>
+          ${attack.damage} <img src="${iconPath}" style="width: 24px; vertical-align: middle;"> 
+          <span class="type ${attack.type}">${attack.type}</span>
+          <span class="${attack.range === 'Ranged' ? 'ranged' : 'melee'}">${attack.range}</span>
+          <span class="${attack.heavy}">${attack.heavy}</span>
+        </div>
+        <video autoplay loop muted src="videos/${attack.video}" type="video/webm"></video>
       `;
     }
 
