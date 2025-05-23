@@ -47,7 +47,16 @@
             "range": "Ranged",
             "type": "Thrust",
             "damage": "1032",
-            "video": "corvid_feathershot.webm"
+            "variants": [
+                {
+                    "label": "Left",
+                    "video": "corvid_feathershot_left.webm"
+                },
+                {
+                    "label": "Right",
+                    "video": "corvid_feathershot_right.webm"
+                }
+            ]
         },
         {
             "name": "Mist Winds",
