@@ -33,6 +33,7 @@
       cursor: pointer;
       border-radius: 5px;
       transition: background 0.3s;
+      text-align: left;
     }
     .monster-buttons button:hover, .attack-buttons button:hover {
       background: #555;
@@ -122,6 +123,7 @@
     }
     .attack-name {
       font-size: 2.5em;
+      font-weight: bold;
       margin-bottom: 10px;
     }
   </style>
@@ -191,7 +193,16 @@
       attackInfo.innerHTML = '';
       (monsters[monster] || []).forEach(attack => {
         const btn = document.createElement('button');
-        btn.textContent = attack.name;
+        const iconPath = `icons/${attack.type.toLowerCase()}.png`;
+        const typeSpan = `<span class="type ${attack.type}">${attack.type}</span>`;
+        const rangeSpan = `<span class="${attack.range === 'Ranged' ? 'ranged' : 'melee'}">${attack.range}</span>`;
+        const heavySpan = `<span class="${attack.heavy}">${attack.heavy}</span>`;
+
+        btn.innerHTML = `
+          <strong>${attack.name}</strong><br>
+          ${attack.damage} <img src="${iconPath}" style="width: 20px; vertical-align: middle;">
+          ${typeSpan} ${rangeSpan} ${heavySpan}
+        `;
         btn.onclick = () => {
           document.querySelectorAll('.attack-buttons button').forEach(b => b.classList.remove('selected'));
           btn.classList.add('selected');
@@ -203,13 +214,14 @@
 
     function showAttackInfo(attack) {
       const iconPath = `icons/${attack.type.toLowerCase()}.png`;
+      const typeSpan = `<span class="type ${attack.type}">${attack.type}</span>`;
+      const rangeSpan = `<span class="${attack.range === 'Ranged' ? 'ranged' : 'melee'}">${attack.range}</span>`;
+      const heavySpan = `<span class="${attack.heavy}">${attack.heavy}</span>`;
       attackInfo.innerHTML = `
         <div class="attack-name">${attack.name}</div>
         <div>
-          ${attack.damage} <img src="${iconPath}" style="width: 24px; vertical-align: middle;"> 
-          <span class="type ${attack.type}">${attack.type}</span>
-          <span class="${attack.range === 'Ranged' ? 'ranged' : 'melee'}">${attack.range}</span>
-          <span class="${attack.heavy}">${attack.heavy}</span>
+          ${attack.damage} <img src="${iconPath}" style="width: 24px; vertical-align: middle;">
+          ${typeSpan} ${rangeSpan} ${heavySpan}
         </div>
         <video autoplay loop muted src="videos/${attack.video}" type="video/webm"></video>
       `;
