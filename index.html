@@ -58,8 +58,27 @@
       max-width: 600px;
       width: 100%;
       margin-top: 10px;
+      border-radius: 20px;
+    }
+    .video-variants {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 20px;
+      margin-top: 15px;
+    }
+
+    .video-variant {
+      text-align: center;
+    }
+
+    .video-variant video {
+      width: 320px;
+      height: auto;
+      max-width: 100%;
       border-radius: 10px;
     }
+
     #raidplan {
       margin: 20px auto;
       width: 90%;
@@ -268,17 +287,20 @@
 
       let videoHTML = '';
       if (attack.variants) {
-        videoHTML = attack.variants.map(v => `
-          <div style="display: inline-block; margin: 10px; text-align: center;">
-            <div><strong>${v.label}</strong></div>
-            <video autoplay loop muted src="videos/${v.video}" type="video/webm" style="border-radius: 10px; max-width: 300px;"></video>
-          </div>
-        `).join('');
-      } else {
         videoHTML = `
-          <video autoplay loop muted src="videos/${attack.video}" type="video/webm" style="border-radius: 10px;"></video>
+          <div class="video-variants">
+            ${attack.variants.map(v => `
+              <div class="video-variant">
+                <div><strong>${v.label}</strong></div>
+                <video autoplay loop muted src="videos/${v.video}" type="video/webm"></video>
+              </div>
+            `).join('')}
+          </div>
         `;
+      } else {
+        videoHTML = `<video autoplay loop muted src="videos/${attack.video}" type="video/webm"></video>`;
       }
+
 
       let statusEffectHTML = '';
       if (attack.status_effect) {
