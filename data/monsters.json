@@ -522,7 +522,16 @@
                 "range": "Melee",
                 "type": "Strike",
                 "damage": "39273",
-                "video": "echidna_facesmash.webm"
+                "variants": [
+                    {
+                        "label": "Face Smash",
+                        "video": "echidna_facesmash.webm"
+                    },
+                    {
+                        "label": "Claw + Face",
+                        "video": "echidna_claw_face.webm"
+                    }
+                ]
             },
             {
                 "name": "Tail Swipe",
