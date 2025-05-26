@@ -285,6 +285,593 @@
                 "video": "wolf_bloodyhowl.webm"
             }
         ]
+    },
+    "Reindeer": {
+        "icon": "angryearth.png",
+        "attacks": [
+            {
+                "name": "Briar Burst",
+                "heavy": "Magic",
+                "range": "Melee",
+                "type": "Thrust & Nature",
+                "damage": "6458",
+                "video": "reindeer_briarburst.webm"
+            },
+            {
+                "name": "Buck",
+                "heavy": "Heavy",
+                "range": "Melee",
+                "type": "Thrust",
+                "damage": "4521",
+                "video": "reindeer_buck.webm"
+            },
+            {
+                "name": "Briar Tangle",
+                "heavy": "Magic",
+                "range": "Melee",
+                "type": "Thrust & Nature",
+                "damage": "3875",
+                "video": "reindeer_briartangle.webm"
+            },
+            {
+                "name": "Swipe",
+                "heavy": "Light",
+                "range": "Melee",
+                "type": "Slash",
+                "damage": "3229",
+                "video": "reindeer_swipe.webm"
+            },
+            {
+                "name": "Shot",
+                "heavy": "Light",
+                "range": "Ranged",
+                "type": "Thrust",
+                "damage": "2583",
+                "video": "reindeer_shot.webm"
+            },
+            {
+                "name": "Briar Spike",
+                "heavy": "Light",
+                "range": "Ranged",
+                "type": "Thrust",
+                "damage": "1937",
+                "video": "reindeer_briarspike.webm"
+            }
+        ]
+    },
+    "Spider": {
+        "icon": "beast.png",
+        "attacks": [
+            {
+                "name": "Stab",
+                "heavy": "Heavy",
+                "range": "Melee",
+                "type": "Thrust",
+                "damage": "9818",
+                "video": "spider_stab.webm"
+            },
+            {
+                "name": "Leaping Bite",
+                "heavy": "Light",
+                "range": "Melee",
+                "type": "Thrust",
+                "damage": "9164",
+                "video": "spider_leapingbite.webm"
+            },
+            {
+                "name": "Web Shot",
+                "heavy": "Light",
+                "range": "Ranged",
+                "type": "Strike",
+                "damage": "3273",
+                "video": "spider_webshot.webm"
+            },
+            {
+                "name": "Venom Spit",
+                "heavy": "Light",
+                "range": "Ranged",
+                "type": "Strike",
+                "damage": "3273",
+                "video": "spider_venomspit.webm"
+            },
+            {
+                "name": "Bite",
+                "heavy": "Light",
+                "range": "Melee",
+                "type": "Thrust",
+                "damage": "1964",
+                "video": "spider_bite.webm"
+            }
+        ]
+    },
+    "Rat": {
+        "icon": "beast.png",
+        "attacks": [
+            {
+                "name": "Rushing 2",
+                "heavy": "Heavy",
+                "range": "Melee",
+                "type": "Thrust",
+                "damage": "4713",
+                "video": "rat_rushing2.webm"
+            },
+            {
+                "name": "Rushing 1",
+                "heavy": "Heavy",
+                "range": "Melee",
+                "type": "Slash",
+                "damage": "4189",
+                "video": "rat_rushing1.webm"
+            },
+            {
+                "name": "Slash Left",
+                "heavy": "Light",
+                "range": "Melee",
+                "type": "Slash",
+                "damage": "3665",
+                "video": "rat_slashleft.webm"
+            },
+            {
+                "name": "Tail Whip Right",
+                "heavy": "Light",
+                "range": "Melee",
+                "type": "Strike",
+                "damage": "2618",
+                "video": "rat_tailwhipright.webm"
+            },
+            {
+                "name": "Cough Heavy",
+                "heavy": "Heavy",
+                "range": "Melee",
+                "type": "Nature",
+                "damage": "2095",
+                "video": "rat_coughheavy.webm"
+            },
+            {
+                "name": "Cough Light",
+                "heavy": "Heavy",
+                "range": "Melee",
+                "type": "Nature",
+                "damage": "1571",
+                "video": "rat_coughlight.webm"
+            }
+        ]
+    },
+    "Elephant": {
+        "icon": "angryearth.png",
+        "attacks": [
+            {
+                "name": "Death Seed",
+                "heavy": "Magic",
+                "range": "Melee",
+                "type": "Nature",
+                "damage": "19375",
+                "video": "elephant_deathseed.webm"
+            },
+            {
+                "name": "Trunk Slam",
+                "heavy": "Heavy",
+                "range": "Melee",
+                "type": "Strike",
+                "damage": "9687",
+                "video": "elephant_trunkslam.webm"
+            },
+            {
+                "name": "Sonic Blast",
+                "heavy": "Magic",
+                "range": "Melee",
+                "type": "Nature",
+                "damage": "9687",
+                "video": "elephant_sonicblast.webm"
+            },
+            {
+                "name": "Leech Seed",
+                "heavy": "Magic",
+                "range": "Melee",
+                "type": "Nature",
+                "damage": "6458",
+                "video": "elephant_leechseed.webm"
+            },
+            {
+                "name": "Swipe",
+                "heavy": "Light",
+                "range": "Melee",
+                "type": "Strike",
+                "damage": "5812",
+                "video": "elephant_swipe.webm"
+            },
+            {
+                "name": "Backfist",
+                "heavy": "Light",
+                "range": "Melee",
+                "type": "Strike",
+                "damage": "4521",
+                "video": "elephant_backfist.webm"
+            }
+        ]
+    },
+    "Echidna": {
+        "icon": "angryearth.png",
+        "attacks": [
+            {
+                "name": "Face Smash",
+                "heavy": "Heavy",
+                "range": "Melee",
+                "type": "Strike",
+                "damage": "39273",
+                "video": "echidna_facesmash.webm"
+            },
+            {
+                "name": "Tail Swipe",
+                "heavy": "Heavy",
+                "range": "Melee",
+                "type": "Strike",
+                "damage": "30109",
+                "video": "echidna_tailswipe.webm"
+            },
+            {
+                "name": "Missile Detonate",
+                "heavy": "Heavy",
+                "range": "Melee",
+                "type": "True",
+                "damage": "30109",
+                "video": "echidna_missiledetonate.webm"
+            },
+            {
+                "name": "Vine Projectile",
+                "heavy": "Light",
+                "range": "Ranged",
+                "type": "Thrust",
+                "damage": "26182",
+                "video": "echidna_vineprojectile.webm"
+            },
+            {
+                "name": "Scrape",
+                "heavy": "Heavy",
+                "range": "Melee",
+                "type": "Slash",
+                "damage": "26182",
+                "video": "echidna_scrape.webm"
+            },
+            {
+                "name": "Body Slam",
+                "heavy": "Heavy",
+                "range": "Melee",
+                "type": "Strike",
+                "damage": "26182",
+                "video": "echidna_bodyslam.webm"
+            },
+            {
+                "name": "Pillar",
+                "heavy": "Heavy",
+                "range": "Melee",
+                "type": "Strike",
+                "damage": "24873",
+                "video": "echidna_pillar.webm"
+            },
+            {
+                "name": "Bite",
+                "heavy": "Heavy",
+                "range": "Melee",
+                "type": "Slash",
+                "damage": "22255",
+                "video": "echidna_bite.webm"
+            },
+            {
+                "name": "Claw Swipe",
+                "heavy": "Light",
+                "range": "Melee",
+                "type": "Slash",
+                "damage": "20946",
+                "video": "echidna_clawswipe.webm"
+            },
+            {
+                "name": "Claw Stomp",
+                "heavy": "Heavy",
+                "range": "Melee",
+                "type": "Slash",
+                "damage": "19637",
+                "video": "echidna_clawstomp.webm"
+            },
+            {
+                "name": "Missile Projectile",
+                "heavy": "Light",
+                "range": "Ranged",
+                "type": "Thrust",
+                "damage": "13091",
+                "video": "echidna_missileprojectile.webm"
+            },
+            {
+                "name": "Tremort Shockwave",
+                "heavy": "Heavy",
+                "range": "Melee",
+                "type": "Slash",
+                "damage": "10473",
+                "video": "echidna_tremortshockwave.webm"
+            },
+            {
+                "name": "Rock Projectile",
+                "heavy": "Heavy",
+                "range": "Ranged",
+                "type": "Strike",
+                "damage": "9164",
+                "video": "echidna_rockprojectile.webm"
+            },
+            {
+                "name": "AoE Knockback",
+                "heavy": "Heavy",
+                "range": "Melee",
+                "type": "Strike",
+                "damage": "6546",
+                "video": "echidna_aoeknockback.webm"
+            }
+        ]
+    },
+    "Typhon": {
+        "icon": "angryearth.png",
+        "attacks": [
+            {
+                "name": "Hungry Howl Finisher",
+                "heavy": "Heavy",
+                "range": "Melee",
+                "type": "Slash",
+                "damage": "2094357",
+                "video": "typhon_hungryhowlfinisher.webm"
+            },
+            {
+                "name": "Blighted Bite",
+                "heavy": "Heavy",
+                "range": "Melee",
+                "type": "Thrust",
+                "damage": "16757",
+                "video": "typhon_blightedbite.webm"
+            },
+            {
+                "name": "Scent of Blood",
+                "heavy": "Heavy",
+                "range": "Melee",
+                "type": "Strike",
+                "damage": "15709",
+                "video": "typhon_scentofblood.webm"
+            },
+            {
+                "name": "Heavy Blighted Swipe",
+                "heavy": "Heavy",
+                "range": "Melee",
+                "type": "Slash",
+                "damage": "14662",
+                "video": "typhon_heavyblightedswipe.webm"
+            },
+            {
+                "name": "Frenzy Swipes Heavy",
+                "heavy": "Heavy",
+                "range": "Melee",
+                "type": "Slash",
+                "damage": "14662",
+                "video": "typhon_frenzyswipesheavy.webm"
+            },
+            {
+                "name": "Rising Thorns AOE",
+                "heavy": "Light",
+                "range": "Melee",
+                "type": "Nature",
+                "damage": "12567",
+                "video": "typhon_risingthornsaoe.webm"
+            },
+            {
+                "name": "Visceral Claw Finisher",
+                "heavy": "Heavy",
+                "range": "Melee",
+                "type": "Thrust",
+                "damage": "12567",
+                "video": "typhon_visceralclawfinisher.webm"
+            },
+            {
+                "name": "From The Shadow AOE",
+                "heavy": "Heavy",
+                "range": "Melee",
+                "type": "Thrust",
+                "damage": "10473",
+                "video": "typhon_fromtheshadowaoe.webm"
+            },
+            {
+                "name": "Ground Slam",
+                "heavy": "Heavy",
+                "range": "Melee",
+                "type": "Strike",
+                "damage": "10473",
+                "video": "typhon_groundslam.webm"
+            },
+            {
+                "name": "Blighted Swipe",
+                "heavy": "Light",
+                "range": "Melee",
+                "type": "Slash",
+                "damage": "9426",
+                "video": "typhon_blightedswipe.webm"
+            },
+            {
+                "name": "Circle Slash",
+                "heavy": "Heavy",
+                "range": "Melee",
+                "type": "Slash",
+                "damage": "6912",
+                "video": "typhon_circleslash.webm"
+            },
+            {
+                "name": "Frenzy Swipes Light",
+                "heavy": "Light",
+                "range": "Melee",
+                "type": "Slash",
+                "damage": "6284",
+                "video": "typhon_frenzyswipeslight.webm"
+            },
+            {
+                "name": "Grasping Thorns Impact",
+                "heavy": "Heavy",
+                "range": "Ranged",
+                "type": "Nature",
+                "damage": "5236",
+                "video": "typhon_graspingthornsimpact.webm"
+            },
+            {
+                "name": "Grasping Thorns Tick",
+                "heavy": "Light",
+                "range": "Melee",
+                "type": "Nature",
+                "damage": "3770",
+                "video": "typhon_graspingthornstick.webm"
+            },
+            {
+                "name": "Feast",
+                "heavy": "Heavy",
+                "range": "Melee",
+                "type": "Thrust",
+                "damage": "2513",
+                "video": "typhon_feast.webm"
+            },
+            {
+                "name": "Bloody Howl",
+                "heavy": "Magic",
+                "range": "Melee",
+                "type": "Nature",
+                "damage": "2095",
+                "video": "typhon_bloodyhowl.webm"
+            }
+        ]
+    },
+    "Medusa": {
+        "icon": "angryearth.png",
+        "attacks": [
+            {
+                "name": "Scoot End",
+                "heavy": "Heavy",
+                "range": "Melee",
+                "type": "Slash",
+                "damage": "23040",
+                "video": "medusa_scootend.webm"
+            },
+            {
+                "name": "Intro AoE",
+                "heavy": "Heavy",
+                "range": "Melee",
+                "type": "Strike",
+                "damage": "23040",
+                "video": "medusa_introaoe.webm"
+            },
+            {
+                "name": "Stomp Final",
+                "heavy": "Heavy",
+                "range": "Melee",
+                "type": "Strike",
+                "damage": "20736",
+                "video": "medusa_stompfinal.webm"
+            },
+            {
+                "name": "Stomp",
+                "heavy": "Heavy",
+                "range": "Melee",
+                "type": "Strike",
+                "damage": "18432",
+                "video": "medusa_stomp.webm"
+            },
+            {
+                "name": "Scoot Loop",
+                "heavy": "Light",
+                "range": "Melee",
+                "type": "Slash",
+                "damage": "18432",
+                "video": "medusa_scootloop.webm"
+            },
+            {
+                "name": "Slash",
+                "heavy": "Light",
+                "range": "Melee",
+                "type": "Strike",
+                "damage": "16128",
+                "video": "medusa_slash.webm"
+            },
+            {
+                "name": "Vine Pull",
+                "heavy": "Magic",
+                "range": "Ranged",
+                "type": "Nature",
+                "damage": "13824",
+                "video": "medusa_vinepull.webm"
+            },
+            {
+                "name": "Hair Toss",
+                "heavy": "Light",
+                "range": "Melee",
+                "type": "Slash",
+                "damage": "11520",
+                "video": "medusa_hairtoss.webm"
+            },
+            {
+                "name": "Barbs Projectile",
+                "heavy": "Magic",
+                "range": "Ranged",
+                "type": "Nature",
+                "damage": "11520",
+                "video": "medusa_barbsprojectile.webm"
+            },
+            {
+                "name": "Barbs AoE",
+                "heavy": "Magic",
+                "range": "Ranged",
+                "type": "Nature",
+                "damage": "11520",
+                "video": "medusa_barbsaoe.webm"
+            },
+            {
+                "name": "Egg Belch",
+                "heavy": "Light",
+                "range": "Ranged",
+                "type": "Nature",
+                "damage": "8064",
+                "video": "medusa_eggbelch.webm"
+            },
+            {
+                "name": "Tail Slam",
+                "heavy": "Heavy",
+                "range": "Melee",
+                "type": "Strike",
+                "damage": "5760",
+                "video": "medusa_tailslam.webm"
+            },
+            {
+                "name": "Ooze Puddle",
+                "heavy": "Magic",
+                "range": "Melee",
+                "type": "Nature",
+                "damage": "5760",
+                "video": "medusa_oozepuddle.webm"
+            },
+            {
+                "name": "Sleep Spore Projectile",
+                "heavy": "Magic",
+                "range": "Ranged",
+                "type": "Nature",
+                "damage": "5760",
+                "video": "medusa_sleepsporeprojectile.webm"
+            },
+            {
+                "name": "Mushroom Infection AoE",
+                "heavy": "Light",
+                "range": "Melee",
+                "type": "Nature",
+                "damage": "4608",
+                "video": "medusa_mushroominfectionaoe.webm"
+            },
+            {
+                "name": "Ooze Puddle Trail",
+                "heavy": "Magic",
+                "range": "Melee",
+                "type": "Nature",
+                "damage": "4608",
+                "video": "medusa_oozepuddletrail.webm"
+            }
+        ]
     }
 }
   
