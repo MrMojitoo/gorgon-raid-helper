@@ -226,7 +226,7 @@
                 "range": "Melee",
                 "type": "Slash",
                 "damage": "7104",
-                "video": "wolf_frenzyswipesheavy.webm"
+                "video": "wolf_frenzy.webm"
             },
             {
                 "name": "Bite",
@@ -258,7 +258,7 @@
                 "range": "Melee",
                 "type": "Slash",
                 "damage": "4521",
-                "video": "wolf_frenzyswipeslight.webm"
+                "video": "wolf_frenzy.webm"
             },
             {
                 "name": "Swipe",
@@ -266,7 +266,20 @@
                 "range": "Melee",
                 "type": "Slash",
                 "damage": "3875",
-                "video": "wolf_swipe.webm"
+                "variants": [
+                    {
+                        "label": "Left",
+                        "video": "wolf_swipe_left.webm"
+                    },
+                    {
+                        "label": "Right",
+                        "video": "wolf_swipe_right.webm"
+                    },
+                    {
+                        "label": "Combo",
+                        "video": "wolf_swipe_combo.webm"
+                    }
+                ]
             },
             {
                 "name": "Feast",
@@ -275,14 +288,6 @@
                 "type": "Thrust",
                 "damage": "3229",
                 "video": "wolf_feast.webm"
-            },
-            {
-                "name": "Bloody Howl",
-                "heavy": "Magic",
-                "range": "Melee",
-                "type": "Nature",
-                "damage": "1292",
-                "video": "wolf_bloodyhowl.webm"
             }
         ]
     },
@@ -319,7 +324,16 @@
                 "range": "Melee",
                 "type": "Slash",
                 "damage": "3229",
-                "video": "reindeer_swipe.webm"
+                "variants": [
+                    {
+                        "label": "Left",
+                        "video": "reindeer_swipe_left.webm"
+                    },
+                    {
+                        "label": "Right",
+                        "video": "reindeer_swipe_right.webm"
+                    }
+                ]
             },
             {
                 "name": "Shot",
@@ -348,7 +362,16 @@
                 "range": "Melee",
                 "type": "Thrust",
                 "damage": "9818",
-                "video": "spider_stab.webm"
+                "variants": [
+                    {
+                        "label": "Left",
+                        "video": "spider_stableft.webm"
+                    },
+                    {
+                        "label": "Right",
+                        "video": "spider_stabright.webm"
+                    }
+                ]
             },
             {
                 "name": "Leaping Bite",
