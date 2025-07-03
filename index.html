@@ -233,6 +233,7 @@
       max-width: 1000px;
       border: 2px solid #444;
       aspect-ratio: 16/9;
+      background-color: black;
     }
     canvas {
       position: absolute;
@@ -244,6 +245,7 @@
       width: 40px;
       height: 40px;
       cursor: move;
+      z-index: 10;
     }
     .color-select {
       display: inline-flex;
@@ -262,6 +264,9 @@
       height: 30px;
       padding: 0;
       cursor: pointer;
+    }
+    #colorPicker:hover, #colorPicker option:hover {
+      background-color: transparent;
     }
     #colorDisplay {
       display: inline-block;
@@ -284,6 +289,8 @@
 
   <hr />
   <h2 style="text-align: center">Raidplan</h2>
+
+
 
   <div id="tools">
     <div class="color-select">
@@ -438,12 +445,14 @@
     
     const bgCanvas = document.getElementById('bgCanvas');
     const canvas = document.getElementById('canvas');
+    const bgCtx = bgCanvas.getContext('2d');
     const ctx = canvas.getContext('2d');
     let drawing = false;
     let currentMode = 'draw';
     let paths = [];
     let redoStack = [];
     let currentPath = [];
+    const icons = [];
 
     function resizeCanvases() {
       const width = document.getElementById('raidplan').offsetWidth;
@@ -476,6 +485,9 @@
       if (paths.length > 0) {
         redoStack.push(paths.pop());
         redraw();
+      } else if (icons.length > 0) {
+        const icon = icons.pop();
+        icon.remove();
       }
     }
 
@@ -490,6 +502,8 @@
       paths = [];
       redoStack = [];
       redraw();
+      icons.forEach(icon => icon.remove());
+      icons.length = 0;
     }
 
     function setMode(mode) {
@@ -520,6 +534,15 @@
         currentPath = { color, width, points: [start] };
       } else if (currentMode === 'erase') {
         drawing = true;
+        icons.forEach((icon, i) => {
+          const rect = icon.getBoundingClientRect();
+          const cx = e.clientX;
+          const cy = e.clientY;
+          if (cx >= rect.left && cx <= rect.right && cy >= rect.top && cy <= rect.bottom) {
+            icon.remove();
+            icons.splice(i, 1);
+          }
+        });
       }
     });
 
@@ -591,8 +614,10 @@
       icon.style.left = (canvas.width / 2 - 20) + 'px';
       icon.style.top = (canvas.height / 2 - 20) + 'px';
       container.appendChild(icon);
+      icons.push(icon);
 
       icon.onmousedown = function (e) {
+        e.preventDefault();
         const shiftX = e.clientX - icon.getBoundingClientRect().left;
         const shiftY = e.clientY - icon.getBoundingClientRect().top;
 
