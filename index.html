@@ -700,14 +700,12 @@
 
     function loadSelectedBackground() {
       const selector = document.getElementById('backgroundSelector');
-      const selectedImg = selector.value;
-      const img = new Image();
-      img.onload = function () {
-        bgCtx.clearRect(0, 0, bgCanvas.width, bgCanvas.height);
-        bgCtx.drawImage(img, 0, 0, bgCanvas.width, bgCanvas.height);
-      };
-      img.src = `images/${selectedImg}`;
+      const selected = selector.value;
+      if (selected) {
+        loadBackgroundFromList(selected);
+      }
     }
+
   </script>
 </body>
 </html>
