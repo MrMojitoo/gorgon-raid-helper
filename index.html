@@ -196,7 +196,7 @@
       -webkit-appearance: none;
       width: 150px;
       height: 6px;
-      background: #444;
+      background: #222;
       border-radius: 5px;
       outline: none;
     }
@@ -225,14 +225,14 @@
     }
     #icon-bank img {
       width: 40px;
-      cursor: grab;
+      cursor: pointer;
     }
     #raidplan {
       position: relative;
       width: 70%;
       max-width: 1000px;
       border: 2px solid #444;
-      aspect-ratio: 3/2;
+      aspect-ratio: 16/9;
     }
     canvas {
       position: absolute;
@@ -248,9 +248,21 @@
       color: transparent;
     }
     #colorPicker {
+      appearance: none;
+      -webkit-appearance: none;
+      background-color: transparent;
+      border: 2px solid #888;
       width: 40px;
       height: 30px;
       padding: 0;
+    }
+    #colorDisplay {
+      display: inline-block;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      margin-left: 10px;
+      border: 1px solid #fff;
     }
 
   </style>
@@ -266,10 +278,10 @@
   <hr />
   <h2 style="text-align: center">Raidplan</h2>
 
-   <div id="tools">
+  <div id="tools">
     <div class="color-select">
       <label>Color:</label>
-      <select id="colorPicker">
+      <select id="colorPicker" onchange="updateColorDisplay()">
         <option value="#FF0000" style="background-color: #FF0000;">🔴</option>
         <option value="#FFA500" style="background-color: #FFA500;">🟠</option>
         <option value="#FFFF00" style="background-color: #FFFF00;">🟡</option>
@@ -281,6 +293,7 @@
         <option value="#888888" style="background-color: #888888;">⚪</option>
         <option value="#FFFFFF" style="background-color: #FFFFFF; color: black;">⬜</option>
       </select>
+      <div id="colorDisplay"></div>
     </div>
     <label>Thickness:
       <input type="range" id="thickness" min="1" max="10" value="3">
@@ -291,18 +304,15 @@
     <button onclick="saveImage()">Save</button>
     <button onclick="undo()">↶ Undo</button>
     <button onclick="redo()">↷ Redo</button>
-    <button onclick="exportLayout()">Export Layout</button>
-    <button onclick="document.getElementById('importFile').click()">Import Layout</button>
-    <input type="file" id="importFile" style="display:none" accept="application/json" onchange="importLayout(event)" />
     <select id="imageSelect"></select>
     <input type="file" accept="image/*" onchange="setBackground(event)">
   </div>
 
   <div id="raidplan-container">
     <div id="icon-bank">
-      <img src="icons/tank.png" draggable="true" ondragstart="startDrag(event)">
-      <img src="icons/dps.png" draggable="true" ondragstart="startDrag(event)">
-      <img src="icons/heal.png" draggable="true" ondragstart="startDrag(event)">
+      <img src="icons/tank.png" onclick="addIcon(this.src)">
+      <img src="icons/dps.png" onclick="addIcon(this.src)">
+      <img src="icons/heal.png" onclick="addIcon(this.src)">
     </div>
     <div id="raidplan">
       <canvas id="bgCanvas"></canvas>
@@ -310,6 +320,8 @@
       <canvas id="canvas"></canvas>
     </div>
   </div>
+
+
 
   <script>
     let monsters = {};
@@ -432,7 +444,7 @@
 
     function resizeCanvases() {
       const width = document.getElementById('raidplan').offsetWidth;
-      const height = width * 0.66;
+      const height = width * 9 / 16;
       [bgCanvas, canvas, iconLayer].forEach(c => {
         c.width = width;
         c.height = height;
@@ -488,6 +500,13 @@
       }
     }
 
+    function updateColorDisplay() {
+      const color = document.getElementById('colorPicker').value;
+      document.getElementById('colorDisplay').style.backgroundColor = color;
+    }
+
+    updateColorDisplay();
+
     canvas.addEventListener('mousedown', e => {
       const color = document.getElementById('colorPicker').value;
       const width = document.getElementById('thickness').value;
@@ -531,79 +550,14 @@
       drawing = false;
     });
 
-    function exportLayout() {
-      const icons = Array.from(iconLayer.children).map(icon => ({
-        src: icon.src,
-        left: icon.style.left,
-        top: icon.style.top,
-        width: icon.width,
-        height: icon.height
-      }));
-      const data = JSON.stringify({ paths, icons });
-      const blob = new Blob([data], { type: 'application/json' });
-      const link = document.createElement('a');
-      link.href = URL.createObjectURL(blob);
-      link.download = 'raidplan_layout.json';
-      link.click();
-    }
-
-    function importLayout(event) {
-      const file = event.target.files[0];
-      if (!file) return;
-      const reader = new FileReader();
-      reader.onload = function (e) {
-        const { paths: loadedPaths, icons } = JSON.parse(e.target.result);
-        paths = loadedPaths;
-        redraw();
-
-        iconLayer.innerHTML = '';
-        icons.forEach(({ src, left, top, width, height }) => {
-          const icon = new Image();
-          icon.src = src;
-          icon.style.left = left;
-          icon.style.top = top;
-          icon.style.position = 'absolute';
-          icon.style.cursor = 'move';
-          icon.width = width;
-          icon.height = height;
-          icon.draggable = true;
-
-          icon.addEventListener('mousedown', function (e) {
-            const offsetX = e.offsetX;
-            const offsetY = e.offsetY;
-
-            function move(ev) {
-              icon.style.left = (ev.pageX - offsetX - iconLayer.getBoundingClientRect().left) + 'px';
-              icon.style.top = (ev.pageY - offsetY - iconLayer.getBoundingClientRect().top) + 'px';
-            }
-
-            function stop() {
-              document.removeEventListener('mousemove', move);
-              document.removeEventListener('mouseup', stop);
-            }
-
-            document.addEventListener('mousemove', move);
-            document.addEventListener('mouseup', stop);
-          });
-
-          iconLayer.appendChild(icon);
-        });
-      };
-      reader.readAsText(file);
-    }
-
     function saveImage() {
       const resultCanvas = document.createElement('canvas');
       resultCanvas.width = canvas.width;
       resultCanvas.height = canvas.height;
       const rctx = resultCanvas.getContext('2d');
       rctx.drawImage(bgCanvas, 0, 0);
+      rctx.drawImage(iconLayer, 0, 0);
       rctx.drawImage(canvas, 0, 0);
-      Array.from(iconLayer.children).forEach(icon => {
-        const x = parseInt(icon.style.left);
-        const y = parseInt(icon.style.top);
-        rctx.drawImage(icon, x, y, icon.width, icon.height);
-      });
       const link = document.createElement('a');
       link.download = 'raidplan.png';
       link.href = resultCanvas.toDataURL();
@@ -624,48 +578,34 @@
       if (file) reader.readAsDataURL(file);
     }
 
-    let draggedIcon = null;
+    function addIcon(src) {
+      const icon = new Image();
+      icon.src = src;
+      icon.style.position = 'absolute';
+      icon.style.left = (iconLayer.width / 2 - 20) + 'px';
+      icon.style.top = (iconLayer.height / 2 - 20) + 'px';
+      icon.style.cursor = 'move';
+      icon.width = 40;
+      icon.height = 40;
+      icon.draggable = false;
 
-    function startDrag(e) {
-      draggedIcon = e.target.cloneNode();
-    }
-
-    iconLayer.addEventListener('dragover', e => {
-      e.preventDefault();
-    });
-
-    iconLayer.addEventListener('drop', e => {
-      e.preventDefault();
-      if (!draggedIcon) return;
-
-      draggedIcon.style.left = e.offsetX + 'px';
-      draggedIcon.style.top = e.offsetY + 'px';
-      draggedIcon.style.position = 'absolute';
-      draggedIcon.style.cursor = 'move';
-      draggedIcon.draggable = true;
-
-      draggedIcon.addEventListener('mousedown', function (e) {
-        const icon = this;
+      icon.addEventListener('mousedown', function (e) {
         let offsetX = e.offsetX;
         let offsetY = e.offsetY;
-
-        function moveHandler(ev) {
+        function move(ev) {
           icon.style.left = (ev.pageX - offsetX - iconLayer.getBoundingClientRect().left) + 'px';
           icon.style.top = (ev.pageY - offsetY - iconLayer.getBoundingClientRect().top) + 'px';
         }
-
-        function upHandler() {
-          document.removeEventListener('mousemove', moveHandler);
-          document.removeEventListener('mouseup', upHandler);
+        function stop() {
+          document.removeEventListener('mousemove', move);
+          document.removeEventListener('mouseup', stop);
         }
-
-        document.addEventListener('mousemove', moveHandler);
-        document.addEventListener('mouseup', upHandler);
+        document.addEventListener('mousemove', move);
+        document.addEventListener('mouseup', stop);
       });
 
-      iconLayer.appendChild(draggedIcon);
-    });
-
+      iconLayer.appendChild(icon);
+    }
   </script>
 </body>
 </html>
