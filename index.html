@@ -218,11 +218,17 @@
       margin-top: 20px;
     }
     .icon-select {
-      display: flex;
-      flex-direction: column;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
       gap: 10px;
       border: 2px solid #888;
       padding: 10px;
+      max-width: 120px;
+    }
+    .icon-select img {
+      width: 30px;
+      height: 30px;
+      cursor: pointer;
     }
     .icon-instance {
       position: absolute;
@@ -303,25 +309,22 @@
     <button onclick="saveImage()">Save</button>
     <button onclick="undo()">↶ Undo</button>
     <button onclick="redo()">↷ Redo</button>
-    <select id="backgroundSelector"></select>
+    <select id="backgroundSelector" onchange="loadBackgroundFromList(this.value)"></select>
+    <input type="file" accept="image/*" onchange="loadCustomBackground(event)">
   </div>
 
   <div id="raidplan-container">
     <div class="icon-select">
-      <label>Icons:</label>
-      <select id="iconDropdown" onchange="addIconFromDropdown()">
-        <option disabled selected>Select an icon</option>
-        <option value="icons/tank.png">Tank</option>
-        <option value="icons/dps.png">DPS</option>
-        <option value="icons/heal.png">Heal</option>
-        <option value="icons/icon4.png">Icon 4</option>
-        <option value="icons/icon5.png">Icon 5</option>
-        <option value="icons/icon6.png">Icon 6</option>
-        <option value="icons/icon7.png">Icon 7</option>
-        <option value="icons/icon8.png">Icon 8</option>
-        <option value="icons/icon9.png">Icon 9</option>
-        <option value="icons/icon10.png">Icon 10</option>
-      </select>
+      <img src="icons/tank.png" onclick="addIcon(this.src)">
+      <img src="icons/dps.png" onclick="addIcon(this.src)">
+      <img src="icons/heal.png" onclick="addIcon(this.src)">
+      <img src="icons/icon4.png" onclick="addIcon(this.src)">
+      <img src="icons/icon5.png" onclick="addIcon(this.src)">
+      <img src="icons/icon6.png" onclick="addIcon(this.src)">
+      <img src="icons/icon7.png" onclick="addIcon(this.src)">
+      <img src="icons/icon8.png" onclick="addIcon(this.src)">
+      <img src="icons/icon9.png" onclick="addIcon(this.src)">
+      <img src="icons/icon10.png" onclick="addIcon(this.src)">
     </div>
     <div id="raidplan">
       <canvas id="bgCanvas"></canvas>
@@ -641,6 +644,20 @@
       if (!src) return;
       addIcon(src);
       dropdown.selectedIndex = 0;
+    }
+
+    function loadCustomBackground(event) {
+      const file = event.target.files[0];
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        const img = new Image();
+        img.onload = function() {
+          bgCtx.clearRect(0, 0, bgCanvas.width, bgCanvas.height);
+          bgCtx.drawImage(img, 0, 0, bgCanvas.width, bgCanvas.height);
+        }
+        img.src = e.target.result;
+      }
+      if (file) reader.readAsDataURL(file);
     }
   </script>
 </body>
