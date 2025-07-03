@@ -217,36 +217,12 @@
       gap: 20px;
       margin-top: 20px;
     }
-    #icon-bank-wrapper {
-      display: flex;
-      flex-direction: row;
-      gap: 10px;
-      border: 2px solid #888;
-      padding: 10px;
-      height: auto;
-    }
-    .icon-column {
+    .icon-select {
       display: flex;
       flex-direction: column;
       gap: 10px;
-    }
-    .icon-column img {
-      width: 30px;
-      height: 30px;
-      cursor: pointer;
-    }
-    #raidplan {
-      position: relative;
-      width: 70%;
-      max-width: 1000px;
-      border: 2px solid #444;
-      aspect-ratio: 16/9;
-      background-color: black;
-    }
-    canvas {
-      position: absolute;
-      top: 0;
-      left: 0;
+      border: 2px solid #888;
+      padding: 10px;
     }
     .icon-instance {
       position: absolute;
@@ -273,7 +249,7 @@
       padding: 0;
       cursor: pointer;
     }
-    #colorPicker:hover, #colorPicker option:hover {
+    #colorPicker option:hover {
       background-color: transparent;
     }
     #colorDisplay {
@@ -327,47 +303,25 @@
     <button onclick="saveImage()">Save</button>
     <button onclick="undo()">↶ Undo</button>
     <button onclick="redo()">↷ Redo</button>
-    <input type="file" accept="image/*" onchange="setBackground(event)">
+    <select id="backgroundSelector"></select>
   </div>
 
   <div id="raidplan-container">
-    <div id="icon-bank-wrapper">
-      <div class="icon-column">
-        <img src="icons/tank.png" onclick="addIcon(this.src)">
-        <img src="icons/dps.png" onclick="addIcon(this.src)">
-        <img src="icons/heal.png" onclick="addIcon(this.src)">
-        <img src="icons/icon4.png" onclick="addIcon(this.src)">
-        <img src="icons/icon5.png" onclick="addIcon(this.src)">
-        <img src="icons/icon6.png" onclick="addIcon(this.src)">
-        <img src="icons/icon7.png" onclick="addIcon(this.src)">
-        <img src="icons/icon8.png" onclick="addIcon(this.src)">
-        <img src="icons/icon9.png" onclick="addIcon(this.src)">
-        <img src="icons/icon10.png" onclick="addIcon(this.src)">
-      </div>
-      <div class="icon-column">
-        <img src="icons/icon11.png" onclick="addIcon(this.src)">
-        <img src="icons/icon12.png" onclick="addIcon(this.src)">
-        <img src="icons/icon13.png" onclick="addIcon(this.src)">
-        <img src="icons/icon14.png" onclick="addIcon(this.src)">
-        <img src="icons/icon15.png" onclick="addIcon(this.src)">
-        <img src="icons/icon16.png" onclick="addIcon(this.src)">
-        <img src="icons/icon17.png" onclick="addIcon(this.src)">
-        <img src="icons/icon18.png" onclick="addIcon(this.src)">
-        <img src="icons/icon19.png" onclick="addIcon(this.src)">
-        <img src="icons/icon20.png" onclick="addIcon(this.src)">
-      </div>
-      <div class="icon-column">
-        <img src="icons/icon21.png" onclick="addIcon(this.src)">
-        <img src="icons/icon22.png" onclick="addIcon(this.src)">
-        <img src="icons/icon23.png" onclick="addIcon(this.src)">
-        <img src="icons/icon24.png" onclick="addIcon(this.src)">
-        <img src="icons/icon25.png" onclick="addIcon(this.src)">
-        <img src="icons/icon26.png" onclick="addIcon(this.src)">
-        <img src="icons/icon27.png" onclick="addIcon(this.src)">
-        <img src="icons/icon28.png" onclick="addIcon(this.src)">
-        <img src="icons/icon29.png" onclick="addIcon(this.src)">
-        <img src="icons/icon30.png" onclick="addIcon(this.src)">
-      </div>
+    <div class="icon-select">
+      <label>Icons:</label>
+      <select id="iconDropdown" onchange="addIconFromDropdown()">
+        <option disabled selected>Select an icon</option>
+        <option value="icons/tank.png">Tank</option>
+        <option value="icons/dps.png">DPS</option>
+        <option value="icons/heal.png">Heal</option>
+        <option value="icons/icon4.png">Icon 4</option>
+        <option value="icons/icon5.png">Icon 5</option>
+        <option value="icons/icon6.png">Icon 6</option>
+        <option value="icons/icon7.png">Icon 7</option>
+        <option value="icons/icon8.png">Icon 8</option>
+        <option value="icons/icon9.png">Icon 9</option>
+        <option value="icons/icon10.png">Icon 10</option>
+      </select>
     </div>
     <div id="raidplan">
       <canvas id="bgCanvas"></canvas>
@@ -485,6 +439,18 @@
 
     // --- RAIDPLAN ---
     
+    fetch('images/images.json')
+      .then(response => response.json())
+      .then(images => {
+        const selector = document.getElementById('backgroundSelector');
+        images.forEach(img => {
+          const option = document.createElement('option');
+          option.value = img;
+          option.textContent = img;
+          selector.appendChild(option);
+        });
+      });
+
     const bgCanvas = document.getElementById('bgCanvas');
     const canvas = document.getElementById('canvas');
     const bgCtx = bgCanvas.getContext('2d');
@@ -523,6 +489,15 @@
       });
     }
 
+    function loadBackgroundFromList(name) {
+      const img = new Image();
+      img.onload = () => {
+        bgCtx.clearRect(0, 0, bgCanvas.width, bgCanvas.height);
+        bgCtx.drawImage(img, 0, 0, bgCanvas.width, bgCanvas.height);
+      };
+      img.src = `images/${name}`;
+    }
+
     function undo() {
       if (paths.length > 0) {
         redoStack.push(paths.pop());
@@ -550,13 +525,12 @@
 
     function setMode(mode) {
       currentMode = mode;
-      document.getElementById('drawBtn').classList.remove('active');
-      document.getElementById('eraseBtn').classList.remove('active');
-      if (mode === 'draw') {
-        document.getElementById('drawBtn').classList.add('active');
-      } else if (mode === 'erase') {
-        document.getElementById('eraseBtn').classList.add('active');
-      }
+      ['drawBtn', 'eraseBtn', 'removeIconBtn'].forEach(id => {
+        document.getElementById(id).classList.remove('active');
+      });
+      if (mode === 'draw') document.getElementById('drawBtn').classList.add('active');
+      if (mode === 'erase') document.getElementById('eraseBtn').classList.add('active');
+      if (mode === 'remove-icon') document.getElementById('removeIconBtn').classList.add('active');
     }
 
     function updateColorDisplay() {
@@ -574,13 +548,12 @@
       if (currentMode === 'draw') {
         drawing = true;
         currentPath = { color, width, points: [start] };
-      } else if (currentMode === 'erase') {
-        drawing = true;
+      } else if (currentMode === 'remove-icon') {
+        const x = e.clientX;
+        const y = e.clientY;
         icons.forEach((icon, i) => {
           const rect = icon.getBoundingClientRect();
-          const cx = e.clientX;
-          const cy = e.clientY;
-          if (cx >= rect.left && cx <= rect.right && cy >= rect.top && cy <= rect.bottom) {
+          if (x >= rect.left && x <= rect.right && y >= rect.top && y <= rect.bottom) {
             icon.remove();
             icons.splice(i, 1);
           }
@@ -604,9 +577,6 @@
           else ctx.lineTo(pt.x, pt.y);
         });
         ctx.stroke();
-      } else if (currentMode === 'erase') {
-        paths = paths.filter(p => !p.points.some(pt => Math.abs(pt.x - x) < 10 && Math.abs(pt.y - y) < 10));
-        redraw();
       }
     });
 
@@ -624,8 +594,8 @@
       resultCanvas.height = canvas.height;
       const rctx = resultCanvas.getContext('2d');
       rctx.drawImage(bgCanvas, 0, 0);
-      document.querySelectorAll('.icon-instance').forEach(icon => {
-        rctx.drawImage(icon, parseFloat(icon.style.left), parseFloat(icon.style.top), 40, 40);
+      icons.forEach(icon => {
+        rctx.drawImage(icon, parseFloat(icon.style.left), parseFloat(icon.style.top), 30, 30);
       });
       rctx.drawImage(canvas, 0, 0);
       const link = document.createElement('a');
@@ -634,27 +604,13 @@
       link.click();
     }
 
-    function setBackground(event) {
-      const file = event.target.files[0];
-      const reader = new FileReader();
-      reader.onload = function (e) {
-        const img = new Image();
-        img.onload = () => {
-          bgCtx.clearRect(0, 0, bgCanvas.width, bgCanvas.height);
-          bgCtx.drawImage(img, 0, 0, bgCanvas.width, bgCanvas.height);
-        };
-        img.src = e.target.result;
-      };
-      if (file) reader.readAsDataURL(file);
-    }
-
     function addIcon(src) {
       const container = document.getElementById('raidplan');
       const icon = document.createElement('img');
       icon.src = src;
       icon.className = 'icon-instance';
-      icon.style.left = (canvas.width / 2 - 20) + 'px';
-      icon.style.top = (canvas.height / 2 - 20) + 'px';
+      icon.style.left = (canvas.width / 2 - 15) + 'px';
+      icon.style.top = (canvas.height / 2 - 15) + 'px';
       container.appendChild(icon);
       icons.push(icon);
 
@@ -677,6 +633,14 @@
           document.removeEventListener('mousemove', onMouseMove);
         }, { once: true });
       };
+    }
+
+    function addIconFromDropdown() {
+      const dropdown = document.getElementById('iconDropdown');
+      const src = dropdown.value;
+      if (!src) return;
+      addIcon(src);
+      dropdown.selectedIndex = 0;
     }
   </script>
 </body>
