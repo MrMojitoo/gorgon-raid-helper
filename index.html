@@ -673,36 +673,34 @@
     }
 
     function addIcon(src) {
-      const img = document.createElement('img');
-      img.src = src;
-      img.className = 'icon-instance';
-      img.style.left = '100px';
-      img.style.top = '100px';
-      img.draggable = false;
+      const container = document.getElementById('raidplan');
+      const icon = document.createElement('img');
+      icon.src = src;
+      icon.className = 'icon-instance';
+      icon.style.left = (canvas.width / 2 - 15) + 'px';
+      icon.style.top = (canvas.height / 2 - 15) + 'px';
+      container.appendChild(icon);
+      icons.push(icon);
 
-      // Ajouter le mouvement
-      let isDragging = false;
-      let offsetX, offsetY;
+      icon.onmousedown = function (e) {
+        e.preventDefault();
+        const shiftX = e.clientX - icon.getBoundingClientRect().left;
+        const shiftY = e.clientY - icon.getBoundingClientRect().top;
 
-      img.addEventListener('mousedown', (e) => {
-        isDragging = true;
-        offsetX = e.offsetX;
-        offsetY = e.offsetY;
-      });
-
-      document.addEventListener('mousemove', (e) => {
-        if (isDragging) {
-          img.style.left = `${e.pageX - canvas.offsetLeft - offsetX}px`;
-          img.style.top = `${e.pageY - canvas.offsetTop - offsetY}px`;
+        function moveAt(pageX, pageY) {
+          icon.style.left = (pageX - container.getBoundingClientRect().left - shiftX) + 'px';
+          icon.style.top = (pageY - container.getBoundingClientRect().top - shiftY) + 'px';
         }
-      });
 
-      document.addEventListener('mouseup', () => {
-        isDragging = false;
-      });
+        function onMouseMove(e) {
+          moveAt(e.pageX, e.pageY);
+        }
 
-      document.getElementById('raidplan').appendChild(img);
-      icons.push(img);
+        document.addEventListener('mousemove', onMouseMove);
+        document.addEventListener('mouseup', function () {
+          document.removeEventListener('mousemove', onMouseMove);
+        }, { once: true });
+      };
     }
 
     function addIconFromDropdown() {
