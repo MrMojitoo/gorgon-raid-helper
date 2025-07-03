@@ -462,17 +462,38 @@
     bgCanvas.width = canvas.width = 960;
     bgCanvas.height = canvas.height = 540;
 
-    fetch('images/images.json')
-      .then(response => response.json())
-      .then(images => {
-        const selector = document.getElementById('backgroundSelector');
-        images.forEach(img => {
-          const option = document.createElement('option');
-          option.value = img;
-          option.textContent = img;
-          selector.appendChild(option);
-        });
-      });
+    const images = [
+      "01_Entrance.png",
+      "02_First_Room.png",
+      "03_First_Corridor.png",
+      "04_Reindeer_Room.png",
+      "05_Path_to_balls.png",
+      "06_Balls_Room.png",
+      "07_Echidna.png",
+      "09_Pool_Room.png",
+      "10_Maze_Left.png",
+      "11_Maze_Right_1.png",
+      "12_Maze_Right_2.png",
+      "13_Skip.png",
+      "14_Gorillas_Pull.png",
+      "15_Poison_Room.png",
+      "16_Split_Left_1.png",
+      "17_Split_Left_2_Spiders.png",
+      "18_Split_Left_3_End.png",
+      "19_Split_Right_1_Start.png",
+      "20_Split_Right_2_Lever.png",
+      "21_Split_Right_3_End.png",
+      "22_Medusa.png"
+    ]
+
+    const selector = document.getElementById('backgroundSelector');
+    images.forEach(img => {
+      const option = document.createElement('option');
+      option.value = img;
+      option.textContent = img;
+      selector.appendChild(option);
+    });
+
 
     const ctx = canvas.getContext('2d');
     let drawing = false;
