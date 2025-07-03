@@ -239,6 +239,12 @@
       top: 0;
       left: 0;
     }
+    .icon-instance {
+      position: absolute;
+      width: 40px;
+      height: 40px;
+      cursor: move;
+    }
     .color-select {
       display: inline-flex;
       align-items: center;
@@ -255,6 +261,7 @@
       width: 40px;
       height: 30px;
       padding: 0;
+      cursor: pointer;
     }
     #colorDisplay {
       display: inline-block;
@@ -304,7 +311,6 @@
     <button onclick="saveImage()">Save</button>
     <button onclick="undo()">↶ Undo</button>
     <button onclick="redo()">↷ Redo</button>
-    <select id="imageSelect"></select>
     <input type="file" accept="image/*" onchange="setBackground(event)">
   </div>
 
@@ -316,7 +322,6 @@
     </div>
     <div id="raidplan">
       <canvas id="bgCanvas"></canvas>
-      <canvas id="icon-layer"></canvas>
       <canvas id="canvas"></canvas>
     </div>
   </div>
@@ -433,9 +438,7 @@
     
     const bgCanvas = document.getElementById('bgCanvas');
     const canvas = document.getElementById('canvas');
-    const iconLayer = document.getElementById('icon-layer');
     const ctx = canvas.getContext('2d');
-    const bgCtx = bgCanvas.getContext('2d');
     let drawing = false;
     let currentMode = 'draw';
     let paths = [];
@@ -445,7 +448,7 @@
     function resizeCanvases() {
       const width = document.getElementById('raidplan').offsetWidth;
       const height = width * 9 / 16;
-      [bgCanvas, canvas, iconLayer].forEach(c => {
+      [bgCanvas, canvas].forEach(c => {
         c.width = width;
         c.height = height;
       });
@@ -556,7 +559,9 @@
       resultCanvas.height = canvas.height;
       const rctx = resultCanvas.getContext('2d');
       rctx.drawImage(bgCanvas, 0, 0);
-      rctx.drawImage(iconLayer, 0, 0);
+      document.querySelectorAll('.icon-instance').forEach(icon => {
+        rctx.drawImage(icon, parseFloat(icon.style.left), parseFloat(icon.style.top), 40, 40);
+      });
       rctx.drawImage(canvas, 0, 0);
       const link = document.createElement('a');
       link.download = 'raidplan.png';
@@ -579,32 +584,32 @@
     }
 
     function addIcon(src) {
-      const icon = new Image();
+      const container = document.getElementById('raidplan');
+      const icon = document.createElement('img');
       icon.src = src;
-      icon.style.position = 'absolute';
-      icon.style.left = (iconLayer.width / 2 - 20) + 'px';
-      icon.style.top = (iconLayer.height / 2 - 20) + 'px';
-      icon.style.cursor = 'move';
-      icon.width = 40;
-      icon.height = 40;
-      icon.draggable = false;
+      icon.className = 'icon-instance';
+      icon.style.left = (canvas.width / 2 - 20) + 'px';
+      icon.style.top = (canvas.height / 2 - 20) + 'px';
+      container.appendChild(icon);
 
-      icon.addEventListener('mousedown', function (e) {
-        let offsetX = e.offsetX;
-        let offsetY = e.offsetY;
-        function move(ev) {
-          icon.style.left = (ev.pageX - offsetX - iconLayer.getBoundingClientRect().left) + 'px';
-          icon.style.top = (ev.pageY - offsetY - iconLayer.getBoundingClientRect().top) + 'px';
-        }
-        function stop() {
-          document.removeEventListener('mousemove', move);
-          document.removeEventListener('mouseup', stop);
-        }
-        document.addEventListener('mousemove', move);
-        document.addEventListener('mouseup', stop);
-      });
+      icon.onmousedown = function (e) {
+        const shiftX = e.clientX - icon.getBoundingClientRect().left;
+        const shiftY = e.clientY - icon.getBoundingClientRect().top;
 
-      iconLayer.appendChild(icon);
+        function moveAt(pageX, pageY) {
+          icon.style.left = (pageX - container.getBoundingClientRect().left - shiftX) + 'px';
+          icon.style.top = (pageY - container.getBoundingClientRect().top - shiftY) + 'px';
+        }
+
+        function onMouseMove(e) {
+          moveAt(e.pageX, e.pageY);
+        }
+
+        document.addEventListener('mousemove', onMouseMove);
+        document.addEventListener('mouseup', function () {
+          document.removeEventListener('mousemove', onMouseMove);
+        }, { once: true });
+      };
     }
   </script>
 </body>
