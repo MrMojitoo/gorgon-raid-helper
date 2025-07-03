@@ -86,20 +86,44 @@
       border: 2px solid #444;
       position: relative;
     }
-    canvas, #bgCanvas {
+    canvas {
       position: absolute;
       top: 0;
       left: 0;
     }
-    #tools {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      margin: 20px 0;
-      gap: 10px;
+    #canvas {
+      pointer-events: auto;
     }
-    #tools input[type=color], #tools input[type=range], #tools input[type=checkbox] {
-      margin-right: 10px;
+    #bgCanvas, #icon-layer {
+      pointer-events: none;
+    }
+    #tools label, #tools button, #tools select, #tools input {
+      font-size: 1em;
+      padding: 8px;
+      margin: 5px;
+      border-radius: 8px;
+      border: none;
+    }
+    
+    #tools button {
+      background-color: #444;
+      color: white;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+    
+    #tools button:hover {
+      background-color: #666;
+    }
+    
+    #tools select, #tools input[type=number], #tools input[type=range] {
+      background-color: #222;
+      color: white;
+    }
+    #icon-layer img {
+      position: absolute;
+      width: 40px;
+      cursor: move;
     }
     #icon-bank img {
       width: 40px;
@@ -205,9 +229,24 @@
   <h2 style="text-align: center">Raidplan</h2>
 
   <div id="tools">
-    <label>Couleur: <input type="color" id="colorPicker" value="#ff0000"></label>
-    <label>Epaisseur: <input type="range" id="thickness" min="1" max="10" value="3"></label>
-    <label>Estomper: <input type="checkbox" id="fadeCheckbox"> après <input type="number" id="fadeTime" min="1" value="5"> s</label>
+    <button onclick="undo()">↶ Annuler</button>
+    <button onclick="redo()">↷ Rétablir</button>
+    <label>Color:
+      <select id="colorPicker">
+        <option value="#FF0000">Rouge</option>
+        <option value="#FFA500">Orange</option>
+        <option value="#FFFF00">Jaune</option>
+        <option value="#00FF00">Vert</option>
+        <option value="#0000FF">Bleu</option>
+        <option value="#4B0082">Indigo</option>
+        <option value="#EE82EE">Violet</option>
+        <option value="#000000">Noir</option>
+        <option value="#888888">Gris</option>
+        <option value="#FFFFFF">Blanc</option>
+      </select>
+    </label>
+    <label>Width: <input type="range" id="thickness" min="1" max="10" value="3"></label>
+    <label>Disappears: <input type="checkbox" id="fadeCheckbox"> après <input type="number" id="fadeTime" min="1" value="5"> s</label>
     <button onclick="clearCanvas()">Effacer</button>
     <button onclick="saveImage()">Sauvegarder</button>
     <select id="imageSelect"></select>
@@ -333,120 +372,139 @@
 
 
     // --- RAIDPLAN ---
+    
+    const bgCanvas = document.getElementById('bgCanvas');
     const canvas = document.getElementById('canvas');
     const iconLayer = document.getElementById('icon-layer');
-    const bgCanvas = document.getElementById('bgCanvas');
     const ctx = canvas.getContext('2d');
     const bgCtx = bgCanvas.getContext('2d');
     let drawing = false;
+    let drawHistory = [];
+    let redoStack = [];
 
     function resizeCanvases() {
-      const rect = document.getElementById('raidplan').getBoundingClientRect();
-      [canvas, iconLayer, bgCanvas].forEach(c => {
-        c.width = rect.width;
-        c.height = rect.height;
+      const width = document.getElementById('raidplan').offsetWidth;
+      const height = width * 0.6;
+      [bgCanvas, canvas, iconLayer].forEach(c => {
+        c.width = width;
+        c.height = height;
       });
     }
 
     window.addEventListener('resize', resizeCanvases);
-    window.addEventListener('load', () => {
-      resizeCanvases();
-      loadImageOptions();
-    });
+    resizeCanvases();
 
-    canvas.addEventListener('mousedown', () => {
-      drawing = true;
-      ctx.beginPath();
-    });
-    canvas.addEventListener('mouseup', () => drawing = false);
-    canvas.addEventListener('mousemove', draw);
+    function saveState() {
+      drawHistory.push(canvas.toDataURL());
+      if (drawHistory.length > 100) drawHistory.shift();
+      redoStack = [];
+    }
 
-    function draw(e) {
-      if (!drawing) return;
-      ctx.strokeStyle = document.getElementById('colorPicker').value;
-      ctx.lineWidth = document.getElementById('thickness').value;
-      ctx.lineCap = 'round';
-      ctx.lineTo(e.offsetX, e.offsetY);
-      ctx.stroke();
-      ctx.beginPath();
-      ctx.moveTo(e.offsetX, e.offsetY);
-
-      if (document.getElementById('fadeCheckbox').checked) {
-        setTimeout(() => {
-          ctx.clearRect(e.offsetX - 5, e.offsetY - 5, 10, 10);
-        }, document.getElementById('fadeTime').value * 1000);
+    function undo() {
+      if (drawHistory.length > 0) {
+        redoStack.push(canvas.toDataURL());
+        const img = new Image();
+        img.src = drawHistory.pop();
+        img.onload = () => ctx.drawImage(img, 0, 0);
       }
     }
 
+    function redo() {
+      if (redoStack.length > 0) {
+        drawHistory.push(canvas.toDataURL());
+        const img = new Image();
+        img.src = redoStack.pop();
+        img.onload = () => ctx.drawImage(img, 0, 0);
+      }
+    }
+
+    canvas.addEventListener('mousedown', e => {
+      saveState();
+      drawing = true;
+      ctx.strokeStyle = document.getElementById('colorPicker').value;
+      ctx.lineWidth = document.getElementById('thickness').value;
+      ctx.beginPath();
+      ctx.moveTo(e.offsetX, e.offsetY);
+    });
+
+    canvas.addEventListener('mousemove', e => {
+      if (drawing) {
+        ctx.lineTo(e.offsetX, e.offsetY);
+        ctx.stroke();
+      }
+    });
+
+    canvas.addEventListener('mouseup', () => {
+      drawing = false;
+    });
+
     function clearCanvas() {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
-      iconLayer.getContext('2d').clearRect(0, 0, iconLayer.width, iconLayer.height);
-      bgCtx.clearRect(0, 0, bgCanvas.width, bgCanvas.height);
     }
 
     function saveImage() {
-      const composite = document.createElement('canvas');
-      composite.width = canvas.width;
-      composite.height = canvas.height;
-      const cx = composite.getContext('2d');
-      cx.drawImage(bgCanvas, 0, 0);
-      cx.drawImage(iconLayer, 0, 0);
-      cx.drawImage(canvas, 0, 0);
       const link = document.createElement('a');
       link.download = 'raidplan.png';
-      link.href = composite.toDataURL();
+      link.href = canvas.toDataURL();
       link.click();
     }
 
-    function setBackground(e) {
+    function setBackground(event) {
+      const file = event.target.files[0];
       const reader = new FileReader();
-      reader.onload = () => {
+      reader.onload = function (e) {
         const img = new Image();
         img.onload = () => {
           bgCtx.clearRect(0, 0, bgCanvas.width, bgCanvas.height);
           bgCtx.drawImage(img, 0, 0, bgCanvas.width, bgCanvas.height);
         };
-        img.src = reader.result;
+        img.src = e.target.result;
       };
-      reader.readAsDataURL(e.target.files[0]);
+      if (file) reader.readAsDataURL(file);
     }
 
-    function loadImageOptions() {
-      fetch('images/images.json')
-        .then(res => res.json())
-        .then(images => {
-          const select = document.getElementById('imageSelect');
-          images.forEach(name => {
-            const option = document.createElement('option');
-            option.value = name;
-            option.textContent = name;
-            select.appendChild(option);
-          });
-          select.onchange = () => {
-            const img = new Image();
-            img.onload = () => {
-              bgCtx.clearRect(0, 0, bgCanvas.width, bgCanvas.height);
-              bgCtx.drawImage(img, 0, 0, bgCanvas.width, bgCanvas.height);
-            };
-            img.src = 'images/' + select.value;
-          };
-        });
-    }
+    let draggedIcon = null;
 
     function startDrag(e) {
-      const img = e.target;
-      iconLayer.ondrop = ev => {
-        ev.preventDefault();
-        const x = ev.offsetX;
-        const y = ev.offsetY;
-        const icon = new Image();
-        icon.src = img.src;
-        icon.onload = () => {
-          iconLayer.getContext('2d').drawImage(icon, x - 20, y - 20, 40, 40);
-        };
-      };
-      iconLayer.ondragover = ev => ev.preventDefault();
+      draggedIcon = e.target.cloneNode();
     }
+
+    iconLayer.addEventListener('dragover', e => {
+      e.preventDefault();
+    });
+
+    iconLayer.addEventListener('drop', e => {
+      e.preventDefault();
+      if (!draggedIcon) return;
+
+      draggedIcon.style.left = e.offsetX + 'px';
+      draggedIcon.style.top = e.offsetY + 'px';
+      draggedIcon.style.position = 'absolute';
+      draggedIcon.style.cursor = 'move';
+      draggedIcon.draggable = true;
+
+      draggedIcon.addEventListener('mousedown', function (e) {
+        const icon = this;
+        let offsetX = e.offsetX;
+        let offsetY = e.offsetY;
+
+        function moveHandler(ev) {
+          icon.style.left = (ev.pageX - offsetX) + 'px';
+          icon.style.top = (ev.pageY - offsetY) + 'px';
+        }
+
+        function upHandler() {
+          document.removeEventListener('mousemove', moveHandler);
+          document.removeEventListener('mouseup', upHandler);
+        }
+
+        document.addEventListener('mousemove', moveHandler);
+        document.addEventListener('mouseup', upHandler);
+      });
+
+      iconLayer.appendChild(draggedIcon);
+    });
+
   </script>
 </body>
 </html>
