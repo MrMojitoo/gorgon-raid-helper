@@ -513,6 +513,33 @@
       redraw();
     }
 
+    canvas.addEventListener('click', (e) => {
+      if (currentMode !== 'remove-icon') return;
+
+      const mouseX = e.offsetX;
+      const mouseY = e.offsetY;
+
+      // Parcours des icônes du haut vers le bas (z-index)
+      for (let i = icons.length - 1; i >= 0; i--) {
+        const icon = icons[i];
+        const rect = icon.getBoundingClientRect();
+        const canvasRect = canvas.getBoundingClientRect();
+        const iconX = rect.left - canvasRect.left;
+        const iconY = rect.top - canvasRect.top;
+
+        // Vérifie si le clic est dans les limites de l’icône (30x30px)
+        if (
+          mouseX >= iconX && mouseX <= iconX + 30 &&
+          mouseY >= iconY && mouseY <= iconY + 30
+        ) {
+          icon.remove();
+          icons.splice(i, 1);
+          break;
+        }
+      }
+    });
+
+
     window.addEventListener('resize', resizeCanvases);
     resizeCanvases();
 
@@ -646,34 +673,36 @@
     }
 
     function addIcon(src) {
-      const container = document.getElementById('raidplan');
-      const icon = document.createElement('img');
-      icon.src = src;
-      icon.className = 'icon-instance';
-      icon.style.left = (canvas.width / 2 - 15) + 'px';
-      icon.style.top = (canvas.height / 2 - 15) + 'px';
-      container.appendChild(icon);
-      icons.push(icon);
+      const img = document.createElement('img');
+      img.src = src;
+      img.className = 'icon-instance';
+      img.style.left = '100px';
+      img.style.top = '100px';
+      img.draggable = false;
 
-      icon.onmousedown = function (e) {
-        e.preventDefault();
-        const shiftX = e.clientX - icon.getBoundingClientRect().left;
-        const shiftY = e.clientY - icon.getBoundingClientRect().top;
+      // Ajouter le mouvement
+      let isDragging = false;
+      let offsetX, offsetY;
 
-        function moveAt(pageX, pageY) {
-          icon.style.left = (pageX - container.getBoundingClientRect().left - shiftX) + 'px';
-          icon.style.top = (pageY - container.getBoundingClientRect().top - shiftY) + 'px';
+      img.addEventListener('mousedown', (e) => {
+        isDragging = true;
+        offsetX = e.offsetX;
+        offsetY = e.offsetY;
+      });
+
+      document.addEventListener('mousemove', (e) => {
+        if (isDragging) {
+          img.style.left = `${e.pageX - canvas.offsetLeft - offsetX}px`;
+          img.style.top = `${e.pageY - canvas.offsetTop - offsetY}px`;
         }
+      });
 
-        function onMouseMove(e) {
-          moveAt(e.pageX, e.pageY);
-        }
+      document.addEventListener('mouseup', () => {
+        isDragging = false;
+      });
 
-        document.addEventListener('mousemove', onMouseMove);
-        document.addEventListener('mouseup', function () {
-          document.removeEventListener('mousemove', onMouseMove);
-        }, { once: true });
-      };
+      document.getElementById('raidplan').appendChild(img);
+      icons.push(img);
     }
 
     function addIconFromDropdown() {
