@@ -182,6 +182,9 @@
       cursor: pointer;
       transition: background 0.3s;
     }
+    #tools button.active {
+      background-color: #888;
+    }
     #tools button:hover {
       background-color: #666;
     }
@@ -192,8 +195,8 @@
     #tools input[type=range] {
       -webkit-appearance: none;
       width: 150px;
-      height: 10px;
-      background: linear-gradient(to right, #00f, #f0f);
+      height: 6px;
+      background: #444;
       border-radius: 5px;
       outline: none;
     }
@@ -226,24 +229,28 @@
     }
     #raidplan {
       position: relative;
-      flex: 1;
+      width: 70%;
+      max-width: 1000px;
       border: 2px solid #444;
+      aspect-ratio: 3/2;
     }
     canvas {
       position: absolute;
       top: 0;
       left: 0;
     }
-    .color-box {
-      width: 20px;
-      height: 20px;
-      display: inline-block;
-      border: 1px solid white;
-    }
     .color-select {
-      display: flex;
+      display: inline-flex;
       align-items: center;
       gap: 5px;
+    }
+    #colorPicker option {
+      color: transparent;
+    }
+    #colorPicker {
+      width: 40px;
+      height: 30px;
+      padding: 0;
     }
 
   </style>
@@ -259,10 +266,10 @@
   <hr />
   <h2 style="text-align: center">Raidplan</h2>
 
-  <div id="tools">
+   <div id="tools">
     <div class="color-select">
-      <label for="colorPicker">Color:</label>
-      <select id="colorPicker" style="appearance: none; padding-right: 30px;">
+      <label>Color:</label>
+      <select id="colorPicker">
         <option value="#FF0000" style="background-color: #FF0000;">🔴</option>
         <option value="#FFA500" style="background-color: #FFA500;">🟠</option>
         <option value="#FFFF00" style="background-color: #FFFF00;">🟡</option>
@@ -278,12 +285,15 @@
     <label>Thickness:
       <input type="range" id="thickness" min="1" max="10" value="3">
     </label>
-    <button onclick="setMode('draw')">Draw</button>
-    <button onclick="setMode('erase')">Eraser</button>
+    <button id="drawBtn" onclick="setMode('draw')">Draw</button>
+    <button id="eraseBtn" onclick="setMode('erase')">Eraser</button>
     <button onclick="clearCanvas()">Clear</button>
     <button onclick="saveImage()">Save</button>
     <button onclick="undo()">↶ Undo</button>
     <button onclick="redo()">↷ Redo</button>
+    <button onclick="exportLayout()">Export Layout</button>
+    <button onclick="document.getElementById('importFile').click()">Import Layout</button>
+    <input type="file" id="importFile" style="display:none" accept="application/json" onchange="importLayout(event)" />
     <select id="imageSelect"></select>
     <input type="file" accept="image/*" onchange="setBackground(event)">
   </div>
@@ -422,7 +432,7 @@
 
     function resizeCanvases() {
       const width = document.getElementById('raidplan').offsetWidth;
-      const height = width * 0.6;
+      const height = width * 0.66;
       [bgCanvas, canvas, iconLayer].forEach(c => {
         c.width = width;
         c.height = height;
@@ -469,6 +479,13 @@
 
     function setMode(mode) {
       currentMode = mode;
+      document.getElementById('drawBtn').classList.remove('active');
+      document.getElementById('eraseBtn').classList.remove('active');
+      if (mode === 'draw') {
+        document.getElementById('drawBtn').classList.add('active');
+      } else if (mode === 'erase') {
+        document.getElementById('eraseBtn').classList.add('active');
+      }
     }
 
     canvas.addEventListener('mousedown', e => {
@@ -501,11 +518,8 @@
         });
         ctx.stroke();
       } else if (currentMode === 'erase') {
-        const hitIndex = paths.findIndex(p => p.points.some(pt => Math.abs(pt.x - x) < 10 && Math.abs(pt.y - y) < 10));
-        if (hitIndex !== -1) {
-          paths.splice(hitIndex, 1);
-          redraw();
-        }
+        paths = paths.filter(p => !p.points.some(pt => Math.abs(pt.x - x) < 10 && Math.abs(pt.y - y) < 10));
+        redraw();
       }
     });
 
@@ -516,6 +530,67 @@
       }
       drawing = false;
     });
+
+    function exportLayout() {
+      const icons = Array.from(iconLayer.children).map(icon => ({
+        src: icon.src,
+        left: icon.style.left,
+        top: icon.style.top,
+        width: icon.width,
+        height: icon.height
+      }));
+      const data = JSON.stringify({ paths, icons });
+      const blob = new Blob([data], { type: 'application/json' });
+      const link = document.createElement('a');
+      link.href = URL.createObjectURL(blob);
+      link.download = 'raidplan_layout.json';
+      link.click();
+    }
+
+    function importLayout(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = function (e) {
+        const { paths: loadedPaths, icons } = JSON.parse(e.target.result);
+        paths = loadedPaths;
+        redraw();
+
+        iconLayer.innerHTML = '';
+        icons.forEach(({ src, left, top, width, height }) => {
+          const icon = new Image();
+          icon.src = src;
+          icon.style.left = left;
+          icon.style.top = top;
+          icon.style.position = 'absolute';
+          icon.style.cursor = 'move';
+          icon.width = width;
+          icon.height = height;
+          icon.draggable = true;
+
+          icon.addEventListener('mousedown', function (e) {
+            const offsetX = e.offsetX;
+            const offsetY = e.offsetY;
+
+            function move(ev) {
+              icon.style.left = (ev.pageX - offsetX - iconLayer.getBoundingClientRect().left) + 'px';
+              icon.style.top = (ev.pageY - offsetY - iconLayer.getBoundingClientRect().top) + 'px';
+            }
+
+            function stop() {
+              document.removeEventListener('mousemove', move);
+              document.removeEventListener('mouseup', stop);
+            }
+
+            document.addEventListener('mousemove', move);
+            document.addEventListener('mouseup', stop);
+          });
+
+          iconLayer.appendChild(icon);
+        });
+      };
+      reader.readAsText(file);
+    }
 
     function saveImage() {
       const resultCanvas = document.createElement('canvas');
@@ -575,8 +650,8 @@
         let offsetY = e.offsetY;
 
         function moveHandler(ev) {
-          icon.style.left = (ev.pageX - offsetX) + 'px';
-          icon.style.top = (ev.pageY - offsetY) + 'px';
+          icon.style.left = (ev.pageX - offsetX - iconLayer.getBoundingClientRect().left) + 'px';
+          icon.style.top = (ev.pageY - offsetY - iconLayer.getBoundingClientRect().top) + 'px';
         }
 
         function upHandler() {
