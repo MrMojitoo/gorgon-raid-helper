@@ -190,9 +190,10 @@
       color: white;
     }
     #tools input[type=range] {
-      width: 100px;
-      height: 8px;
-      background: #555;
+      -webkit-appearance: none;
+      width: 150px;
+      height: 10px;
+      background: linear-gradient(to right, #00f, #f0f);
       border-radius: 5px;
       outline: none;
     }
@@ -203,45 +204,46 @@
       height: 16px;
       border-radius: 50%;
       background: #fff;
+      border: 2px solid #888;
       cursor: pointer;
     }
+    #raidplan-container {
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      gap: 20px;
+      margin-top: 20px;
+    }
+    #icon-bank {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+    }
+    #icon-bank img {
+      width: 40px;
+      cursor: grab;
+    }
     #raidplan {
-      margin: 20px auto;
-      width: 90%;
-      max-width: 1200px;
-      border: 2px solid #444;
       position: relative;
+      flex: 1;
+      border: 2px solid #444;
     }
     canvas {
       position: absolute;
       top: 0;
       left: 0;
     }
-    #canvas {
-      pointer-events: auto;
-    }
-    #bgCanvas, #icon-layer {
-      pointer-events: none;
-    }
-    #icon-layer img {
-      position: absolute;
-      width: 40px;
-      cursor: move;
-    }
-    #icon-bank {
-      text-align: center;
-      margin-top: 20px;
-    }
-    #icon-bank img {
-      width: 40px;
-      margin: 5px;
-      cursor: grab;
-    }
-    .color-option {
+    .color-box {
       width: 20px;
       height: 20px;
       display: inline-block;
       border: 1px solid white;
+    }
+    .color-select {
+      display: flex;
+      align-items: center;
+      gap: 5px;
     }
 
   </style>
@@ -258,20 +260,21 @@
   <h2 style="text-align: center">Raidplan</h2>
 
   <div id="tools">
-    <label>Color:
-      <select id="colorPicker">
-        <option value="#FF0000" style="background-color: #FF0000;"></option>
-        <option value="#FFA500" style="background-color: #FFA500;"></option>
-        <option value="#FFFF00" style="background-color: #FFFF00;"></option>
-        <option value="#00FF00" style="background-color: #00FF00;"></option>
-        <option value="#0000FF" style="background-color: #0000FF;"></option>
-        <option value="#4B0082" style="background-color: #4B0082;"></option>
-        <option value="#EE82EE" style="background-color: #EE82EE;"></option>
-        <option value="#000000" style="background-color: #000000;"></option>
-        <option value="#888888" style="background-color: #888888;"></option>
-        <option value="#FFFFFF" style="background-color: #FFFFFF;"></option>
+    <div class="color-select">
+      <label for="colorPicker">Color:</label>
+      <select id="colorPicker" style="appearance: none; padding-right: 30px;">
+        <option value="#FF0000" style="background-color: #FF0000;">🔴</option>
+        <option value="#FFA500" style="background-color: #FFA500;">🟠</option>
+        <option value="#FFFF00" style="background-color: #FFFF00;">🟡</option>
+        <option value="#00FF00" style="background-color: #00FF00;">🟢</option>
+        <option value="#0000FF" style="background-color: #0000FF;">🔵</option>
+        <option value="#4B0082" style="background-color: #4B0082;">🟣</option>
+        <option value="#EE82EE" style="background-color: #EE82EE;">💗</option>
+        <option value="#000000" style="background-color: #000000;">⚫</option>
+        <option value="#888888" style="background-color: #888888;">⚪</option>
+        <option value="#FFFFFF" style="background-color: #FFFFFF; color: black;">⬜</option>
       </select>
-    </label>
+    </div>
     <label>Thickness:
       <input type="range" id="thickness" min="1" max="10" value="3">
     </label>
@@ -285,16 +288,17 @@
     <input type="file" accept="image/*" onchange="setBackground(event)">
   </div>
 
-  <div id="raidplan">
-    <canvas id="bgCanvas"></canvas>
-    <canvas id="icon-layer"></canvas>
-    <canvas id="canvas"></canvas>
-  </div>
-
-  <div id="icon-bank" style="text-align: center">
-    <img src="icons/tank.png" draggable="true" ondragstart="startDrag(event)">
-    <img src="icons/dps.png" draggable="true" ondragstart="startDrag(event)">
-    <img src="icons/heal.png" draggable="true" ondragstart="startDrag(event)">
+  <div id="raidplan-container">
+    <div id="icon-bank">
+      <img src="icons/tank.png" draggable="true" ondragstart="startDrag(event)">
+      <img src="icons/dps.png" draggable="true" ondragstart="startDrag(event)">
+      <img src="icons/heal.png" draggable="true" ondragstart="startDrag(event)">
+    </div>
+    <div id="raidplan">
+      <canvas id="bgCanvas"></canvas>
+      <canvas id="icon-layer"></canvas>
+      <canvas id="canvas"></canvas>
+    </div>
   </div>
 
   <script>
@@ -423,6 +427,7 @@
         c.width = width;
         c.height = height;
       });
+      redraw();
     }
 
     window.addEventListener('resize', resizeCanvases);
@@ -475,18 +480,17 @@
         drawing = true;
         currentPath = { color, width, points: [start] };
       } else if (currentMode === 'erase') {
-        const hitIndex = paths.findIndex(p => p.points.some(pt => Math.abs(pt.x - start.x) < 10 && Math.abs(pt.y - start.y) < 10));
-        if (hitIndex !== -1) {
-          redoStack = [];
-          paths.splice(hitIndex, 1);
-          redraw();
-        }
+        drawing = true;
       }
     });
 
     canvas.addEventListener('mousemove', e => {
-      if (drawing && currentMode === 'draw') {
-        currentPath.points.push({ x: e.offsetX, y: e.offsetY });
+      if (!drawing) return;
+      const x = e.offsetX;
+      const y = e.offsetY;
+
+      if (currentMode === 'draw') {
+        currentPath.points.push({ x, y });
         redraw();
         ctx.strokeStyle = currentPath.color;
         ctx.lineWidth = currentPath.width;
@@ -496,15 +500,21 @@
           else ctx.lineTo(pt.x, pt.y);
         });
         ctx.stroke();
+      } else if (currentMode === 'erase') {
+        const hitIndex = paths.findIndex(p => p.points.some(pt => Math.abs(pt.x - x) < 10 && Math.abs(pt.y - y) < 10));
+        if (hitIndex !== -1) {
+          paths.splice(hitIndex, 1);
+          redraw();
+        }
       }
     });
 
     canvas.addEventListener('mouseup', () => {
-      if (drawing && currentMode === 'draw') {
+      if (currentMode === 'draw' && drawing) {
         paths.push(currentPath);
         redoStack = [];
-        drawing = false;
       }
+      drawing = false;
     });
 
     function saveImage() {
