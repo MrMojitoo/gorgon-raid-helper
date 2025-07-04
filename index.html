@@ -519,6 +519,15 @@
       });
       ctx.stroke();
     }
+    function setMode(mode) {
+      currentMode = mode;
+      ['drawBtn', 'eraseBtn'].forEach(id => {
+        document.getElementById(id).classList.remove('active');
+      });
+      if (mode === 'draw') document.getElementById('drawBtn').classList.add('active');
+      else if (mode === 'erase') document.getElementById('eraseBtn').classList.add('active');
+    }
+    
     canvas.addEventListener('mousedown', (e) => {
       if (currentMode === 'draw') {
         drawing = true;
@@ -601,6 +610,34 @@
           document.removeEventListener('mousemove', onMouseMove);
         }, { once: true });
       };
+    }
+
+    function updateColorDisplay() {
+      const color = document.getElementById('colorPicker').value;
+      document.getElementById('colorDisplay').style.backgroundColor = color;
+    }
+    updateColorDisplay();
+
+    function clearCanvas() {
+      paths = [];
+      redoStack = [];
+      redraw();
+      icons.forEach(icon => icon.remove());
+      icons.length = 0;
+    }
+
+    function undo() {
+      if (paths.length > 0) {
+        redoStack.push(paths.pop());
+        redraw();
+      }
+    }
+
+    function redo() {
+      if (redoStack.length > 0) {
+        paths.push(redoStack.pop());
+        redraw();
+      }
     }
 
 
