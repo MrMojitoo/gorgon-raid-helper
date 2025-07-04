@@ -454,12 +454,6 @@
 
     // --- RAIDPLAN ---
     
-    const bgCanvas = document.getElementById('bgCanvas');
-    const canvas = document.getElementById('canvas');
-    const bgCtx = bgCanvas.getContext('2d');
-
-    bgCanvas.width = canvas.width = 960;
-    bgCanvas.height = canvas.height = 540;
 
     const images = [
       "01_Entrance.PNG",
@@ -485,6 +479,14 @@
       "22_Medusa.PNG"
     ]
 
+    const bgCanvas = document.getElementById('bgCanvas');
+    const canvas = document.getElementById('canvas');
+    const bgCtx = bgCanvas.getContext('2d');
+    const ctx = canvas.getContext('2d');
+
+    bgCanvas.width = canvas.width = 960;
+    bgCanvas.height = canvas.height = 540;
+
     const selector = document.getElementById('backgroundSelector');
     images.forEach(img => {
       const option = document.createElement('option');
@@ -493,13 +495,11 @@
       selector.appendChild(option);
     });
 
-
-    const ctx = canvas.getContext('2d');
     let drawing = false;
     let currentMode = 'draw';
     let paths = [];
     let redoStack = [];
-    let currentPath = [];
+    let currentPath = null;
     const icons = [];
 
     function resizeCanvases() {
@@ -511,56 +511,23 @@
       });
       redraw();
     }
-
     window.addEventListener('resize', resizeCanvases);
     resizeCanvases();
 
     function redraw() {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
-      paths.forEach(p => {
-        ctx.strokeStyle = p.color;
-        ctx.lineWidth = p.width;
-        ctx.beginPath();
-        p.points.forEach((pt, idx) => {
-          if (idx === 0) ctx.moveTo(pt.x, pt.y);
-          else ctx.lineTo(pt.x, pt.y);
-        });
-        ctx.stroke();
+      paths.forEach(p => drawPath(p));
+    }
+
+    function drawPath(p) {
+      ctx.strokeStyle = p.color;
+      ctx.lineWidth = p.width;
+      ctx.beginPath();
+      p.points.forEach((pt, idx) => {
+        if (idx === 0) ctx.moveTo(pt.x, pt.y);
+        else ctx.lineTo(pt.x, pt.y);
       });
-    }
-
-    function loadBackgroundFromList(name) {
-      const img = new Image();
-      img.onload = () => {
-        bgCtx.clearRect(0, 0, bgCanvas.width, bgCanvas.height);
-        bgCtx.drawImage(img, 0, 0, bgCanvas.width, bgCanvas.height);
-      };
-      img.src = `images/${name}`;
-    }
-
-    function undo() {
-      if (paths.length > 0) {
-        redoStack.push(paths.pop());
-        redraw();
-      } else if (icons.length > 0) {
-        const icon = icons.pop();
-        icon.remove();
-      }
-    }
-
-    function redo() {
-      if (redoStack.length > 0) {
-        paths.push(redoStack.pop());
-        redraw();
-      }
-    }
-
-    function clearCanvas() {
-      paths = [];
-      redoStack = [];
-      redraw();
-      icons.forEach(icon => icon.remove());
-      icons.length = 0;
+      ctx.stroke();
     }
 
     function setMode(mode) {
@@ -568,19 +535,9 @@
       ['drawBtn', 'eraseBtn'].forEach(id => {
         document.getElementById(id).classList.remove('active');
       });
-      if (mode === 'draw') {
-        document.getElementById('drawBtn').classList.add('active');
-      } else if (mode === 'erase') {
-        document.getElementById('eraseBtn').classList.add('active');
-      }
+      if (mode === 'draw') document.getElementById('drawBtn').classList.add('active');
+      else if (mode === 'erase') document.getElementById('eraseBtn').classList.add('active');
     }
-
-    function updateColorDisplay() {
-      const color = document.getElementById('colorPicker').value;
-      document.getElementById('colorDisplay').style.backgroundColor = color;
-    }
-
-    updateColorDisplay();
 
     canvas.addEventListener('mousedown', (e) => {
       if (currentMode === 'draw') {
@@ -591,127 +548,76 @@
           points: [{ x: e.offsetX, y: e.offsetY }]
         };
       } else if (currentMode === 'erase') {
+        drawing = true;
         eraseAt(e.offsetX, e.offsetY);
       }
     });
 
     canvas.addEventListener('mousemove', (e) => {
-      if (currentMode === 'draw' && drawing) {
-        currentPath.points.push({ x: e.offsetX, y: e.offsetY });
-        redraw();
-        ctx.strokeStyle = currentPath.color;
-        ctx.lineWidth = currentPath.width;
-        ctx.beginPath();
-        const pts = currentPath.points;
-        ctx.moveTo(pts[pts.length - 2].x, pts[pts.length - 2].y);
-        ctx.lineTo(pts[pts.length - 1].x, pts[pts.length - 1].y);
-        ctx.stroke();
-      } else if (currentMode === 'erase' && drawing) {
-        eraseAt(e.offsetX, e.offsetY);
+      if (!drawing) return;
+      const x = e.offsetX, y = e.offsetY;
+      if (currentMode === 'draw' && currentPath) {
+        currentPath.points.push({ x, y });
+        drawPath(currentPath); // live drawing
+      } else if (currentMode === 'erase') {
+        eraseAt(x, y);
       }
     });
 
     canvas.addEventListener('mouseup', () => {
-      if (currentMode === 'draw' && currentPath.points.length > 0) {
+      if (currentMode === 'draw' && currentPath && currentPath.points.length > 0) {
         paths.push(currentPath);
-        currentPath = [];
-        redoStack = []; // clear redo after new draw
+        currentPath = null;
+        redoStack = [];
       }
       drawing = false;
     });
 
-
-    function saveImage() {
-      const resultCanvas = document.createElement('canvas');
-      resultCanvas.width = canvas.width;
-      resultCanvas.height = canvas.height;
-      const rctx = resultCanvas.getContext('2d');
-      rctx.drawImage(bgCanvas, 0, 0);
-      icons.forEach(icon => {
-        rctx.drawImage(icon, parseFloat(icon.style.left), parseFloat(icon.style.top), 30, 30);
-      });
-      rctx.drawImage(canvas, 0, 0);
-      const link = document.createElement('a');
-      link.download = 'raidplan.png';
-      link.href = resultCanvas.toDataURL();
-      link.click();
-    }
-
-    function addIcon(src) {
-      const container = document.getElementById('raidplan');
-      const icon = document.createElement('img');
-      icon.src = src;
-      icon.className = 'icon-instance';
-      icon.style.left = (canvas.width / 2 - 15) + 'px';
-      icon.style.top = (canvas.height / 2 - 15) + 'px';
-      container.appendChild(icon);
-      icons.push(icon);
-
-      icon.onmousedown = function (e) {
-        e.preventDefault();
-        const shiftX = e.clientX - icon.getBoundingClientRect().left;
-        const shiftY = e.clientY - icon.getBoundingClientRect().top;
-
-        function moveAt(pageX, pageY) {
-          icon.style.left = (pageX - container.getBoundingClientRect().left - shiftX) + 'px';
-          icon.style.top = (pageY - container.getBoundingClientRect().top - shiftY) + 'px';
-        }
-
-        function onMouseMove(e) {
-          moveAt(e.pageX, e.pageY);
-        }
-
-        document.addEventListener('mousemove', onMouseMove);
-        document.addEventListener('mouseup', function () {
-          document.removeEventListener('mousemove', onMouseMove);
-        }, { once: true });
-      };
-    }
-
-    function addIconFromDropdown() {
-      const dropdown = document.getElementById('iconDropdown');
-      const src = dropdown.value;
-      if (!src) return;
-      addIcon(src);
-      dropdown.selectedIndex = 0;
-    }
-
-    function loadCustomBackground(event) {
-      const file = event.target.files[0];
-      const reader = new FileReader();
-      reader.onload = function(e) {
-        const img = new Image();
-        img.onload = function() {
-          bgCtx.clearRect(0, 0, bgCanvas.width, bgCanvas.height);
-          bgCtx.drawImage(img, 0, 0, bgCanvas.width, bgCanvas.height);
-        }
-        img.src = e.target.result;
-      }
-      if (file) reader.readAsDataURL(file);
-    }
-
-    function loadSelectedBackground() {
-      const selector = document.getElementById('backgroundSelector');
-      const selected = selector.value;
-      if (selected) {
-        loadBackgroundFromList(selected);
-      }
-    }
-
     function eraseAt(x, y) {
       const threshold = 10;
-      let changed = false;
+      const px = x, py = y;
+      let removed = false;
       paths = paths.filter(path => {
-        const hit = path.points.some(pt => {
-          const dx = pt.x - x;
-          const dy = pt.y - y;
-          return Math.sqrt(dx * dx + dy * dy) <= threshold;
-        });
-        if (hit) changed = true;
-        return !hit;
+        for (const pt of path.points) {
+          const dx = pt.x - px;
+          const dy = pt.y - py;
+          if (Math.sqrt(dx * dx + dy * dy) <= threshold) {
+            removed = true;
+            return false; // remove path
+          }
+        }
+        return true;
       });
-      if (changed) redraw();
-    } 
+      if (removed) redraw();
+    }
+
+    function updateColorDisplay() {
+      const color = document.getElementById('colorPicker').value;
+      document.getElementById('colorDisplay').style.backgroundColor = color;
+    }
+    updateColorDisplay();
+
+    function clearCanvas() {
+      paths = [];
+      redoStack = [];
+      redraw();
+      icons.forEach(icon => icon.remove());
+      icons.length = 0;
+    }
+
+    function undo() {
+      if (paths.length > 0) {
+        redoStack.push(paths.pop());
+        redraw();
+      }
+    }
+
+    function redo() {
+      if (redoStack.length > 0) {
+        paths.push(redoStack.pop());
+        redraw();
+      }
+    }
 
 
 
