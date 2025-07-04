@@ -316,7 +316,6 @@
     </label>
     <button id="drawBtn" onclick="setMode('draw')">Draw</button>
     <button id="eraseBtn" onclick="setMode('erase')">Eraser</button>
-    <button id="removeIconBtn" onclick="setMode('remove-icon')">Remove Icon</button>
     <button onclick="clearCanvas()">Clear</button>
     <button onclick="saveImage()">Save</button>
     <button onclick="undo()">↶ Undo</button>
@@ -513,33 +512,6 @@
       redraw();
     }
 
-    canvas.addEventListener('click', (e) => {
-      if (currentMode !== 'remove-icon') return;
-
-      const mouseX = e.offsetX;
-      const mouseY = e.offsetY;
-
-      // Parcours des icônes du haut vers le bas (z-index)
-      for (let i = icons.length - 1; i >= 0; i--) {
-        const icon = icons[i];
-        const rect = icon.getBoundingClientRect();
-        const canvasRect = canvas.getBoundingClientRect();
-        const iconX = rect.left - canvasRect.left;
-        const iconY = rect.top - canvasRect.top;
-
-        // Vérifie si le clic est dans les limites de l’icône (30x30px)
-        if (
-          mouseX >= iconX && mouseX <= iconX + 30 &&
-          mouseY >= iconY && mouseY <= iconY + 30
-        ) {
-          icon.remove();
-          icons.splice(i, 1);
-          break;
-        }
-      }
-    });
-
-
     window.addEventListener('resize', resizeCanvases);
     resizeCanvases();
 
@@ -593,12 +565,14 @@
 
     function setMode(mode) {
       currentMode = mode;
-      ['drawBtn', 'eraseBtn', 'removeIconBtn'].forEach(id => {
+      ['drawBtn', 'eraseBtn'].forEach(id => {
         document.getElementById(id).classList.remove('active');
       });
-      if (mode === 'draw') document.getElementById('drawBtn').classList.add('active');
-      if (mode === 'erase') document.getElementById('eraseBtn').classList.add('active');
-      if (mode === 'remove-icon') document.getElementById('removeIconBtn').classList.add('active');
+      if (mode === 'draw') {
+        document.getElementById('drawBtn').classList.add('active');
+      } else if (mode === 'erase') {
+        document.getElementById('eraseBtn').classList.add('active');
+      }
     }
 
     function updateColorDisplay() {
@@ -608,53 +582,44 @@
 
     updateColorDisplay();
 
-    canvas.addEventListener('mousedown', e => {
-      const color = document.getElementById('colorPicker').value;
-      const width = document.getElementById('thickness').value;
-      const start = { x: e.offsetX, y: e.offsetY };
-
+    canvas.addEventListener('mousedown', (e) => {
       if (currentMode === 'draw') {
         drawing = true;
-        currentPath = { color, width, points: [start] };
-      } else if (currentMode === 'remove-icon') {
-        const x = e.clientX;
-        const y = e.clientY;
-        icons.forEach((icon, i) => {
-          const rect = icon.getBoundingClientRect();
-          if (x >= rect.left && x <= rect.right && y >= rect.top && y <= rect.bottom) {
-            icon.remove();
-            icons.splice(i, 1);
-          }
-        });
+        currentPath = {
+          color: document.getElementById('colorPicker').value,
+          width: parseInt(document.getElementById('thickness').value),
+          points: [{ x: e.offsetX, y: e.offsetY }]
+        };
+      } else if (currentMode === 'erase') {
+        eraseAt(e.offsetX, e.offsetY);
       }
     });
 
-    canvas.addEventListener('mousemove', e => {
-      if (!drawing) return;
-      const x = e.offsetX;
-      const y = e.offsetY;
-
-      if (currentMode === 'draw') {
-        currentPath.points.push({ x, y });
+    canvas.addEventListener('mousemove', (e) => {
+      if (currentMode === 'draw' && drawing) {
+        currentPath.points.push({ x: e.offsetX, y: e.offsetY });
         redraw();
         ctx.strokeStyle = currentPath.color;
         ctx.lineWidth = currentPath.width;
         ctx.beginPath();
-        currentPath.points.forEach((pt, idx) => {
-          if (idx === 0) ctx.moveTo(pt.x, pt.y);
-          else ctx.lineTo(pt.x, pt.y);
-        });
+        const pts = currentPath.points;
+        ctx.moveTo(pts[pts.length - 2].x, pts[pts.length - 2].y);
+        ctx.lineTo(pts[pts.length - 1].x, pts[pts.length - 1].y);
         ctx.stroke();
+      } else if (currentMode === 'erase' && drawing) {
+        eraseAt(e.offsetX, e.offsetY);
       }
     });
 
     canvas.addEventListener('mouseup', () => {
-      if (currentMode === 'draw' && drawing) {
+      if (currentMode === 'draw' && currentPath.points.length > 0) {
         paths.push(currentPath);
-        redoStack = [];
+        currentPath = [];
+        redoStack = []; // clear redo after new draw
       }
       drawing = false;
     });
+
 
     function saveImage() {
       const resultCanvas = document.createElement('canvas');
@@ -732,6 +697,23 @@
         loadBackgroundFromList(selected);
       }
     }
+
+    function eraseAt(x, y) {
+      const threshold = 10;
+      let changed = false;
+      paths = paths.filter(path => {
+        const hit = path.points.some(pt => {
+          const dx = pt.x - x;
+          const dy = pt.y - y;
+          return Math.sqrt(dx * dx + dy * dy) <= threshold;
+        });
+        if (hit) changed = true;
+        return !hit;
+      });
+      if (changed) redraw();
+    } 
+
+
 
   </script>
 </body>
