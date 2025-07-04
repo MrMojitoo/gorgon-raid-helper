@@ -219,11 +219,12 @@
     }
     .icon-select {
       display: grid;
-      grid-template-columns: repeat(3, 1fr);
+      grid-template-columns: repeat(auto-fill, 40px);
+      grid-auto-flow: column;
+      grid-auto-rows: 40px;
+      justify-content: end;
       gap: 10px;
-      border: 2px solid #888;
       padding: 10px;
-      max-width: 120px;
     }
     .icon-select img {
       width: 30px;
