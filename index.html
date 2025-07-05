@@ -690,10 +690,14 @@
         const shiftX = e.clientX - icon.getBoundingClientRect().left;
         const shiftY = e.clientY - icon.getBoundingClientRect().top;
 
-        function moveAt(pageX, pageY) {
-          icon.style.left = (pageX - container.getBoundingClientRect().left - shiftX) + 'px';
-          icon.style.top = (pageY - container.getBoundingClientRect().top - shiftY) + 'px';
-        }
+      function moveAt(pageX, pageY) {
+        const containerRect = container.getBoundingClientRect();
+        const offsetX = pageX - containerRect.left - shiftX;
+        const offsetY = pageY - containerRect.top - shiftY + window.scrollY;
+        icon.style.left = offsetX + 'px';
+        icon.style.top = offsetY + 'px';
+      }
+
 
         function onMouseMove(e) {
           moveAt(e.pageX, e.pageY);
