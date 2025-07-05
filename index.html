@@ -322,6 +322,15 @@
       transform: scale(1.2);
     }
 
+    #thickness {
+      border: 2px solid white;
+      border-radius: 8px;
+    }
+
+    #backgroundSelector {
+      border: 2px solid white;
+      border-radius: 8px;
+    }
 
   </style>
 </head>
@@ -338,7 +347,7 @@
 
 
 
-  <div id="tools" style="display: flex; justify-content: center; align-items: center; flex-wrap: wrap; gap: 15px; margin-top: 20px;">
+  <div id="tools" style="display: flex; justify-content: center; align-items: center; flex-wrap: wrap; gap: 15px; margin-top: 20px; margin-left: 150px;">
     <!-- Couleurs -->
     <div class="color-select" style="display: flex; flex-direction: column; align-items: center;">
       <label style="margin-bottom: 0px;">Color</label>
@@ -382,9 +391,9 @@
       </button>
     </div>
     <!-- Background image -->
-    <div style="display: flex; flex-direction: column; align-items: center; width: 160px;">
+    <div style="display: flex; flex-direction: column; align-items: center; width: 250px;">
       <label for="backgroundSelector" style="margin-bottom: 0px;">Background image</label>
-      <select id="backgroundSelector" style="width: 100%;""></select>
+      <select id="backgroundSelector" style="width: 100%;"></select>
       <button onclick="loadSelectedBackground()" style="margin-top: 5px; width: 100%">Load</button>
     </div>
     <!-- Upload -->
