@@ -359,6 +359,7 @@
       <label for="thickness" style="margin-bottom: 0px;">Thickness</label>
       <input type="range" id="thickness" min="1" max="10" value="3">
     </div>
+    <canvas id="previewCanvas" width="100" height="20" style="display: block; margin: 0 auto;"></canvas>
     <!-- Outils (icônes) -->
     <div style="display: flex; gap: 10px;">
       <button id="drawBtn" class="tool-button" onclick="setMode('draw')">
@@ -381,10 +382,10 @@
       </button>
     </div>
     <!-- Background image -->
-    <div style="display: flex; flex-direction: column; align-items: center;">
+    <div style="display: flex; flex-direction: column; align-items: center; width: 160px;">
       <label for="backgroundSelector" style="margin-bottom: 0px;">Background image</label>
-      <select id="backgroundSelector"></select>
-      <button onclick="loadSelectedBackground()" style="margin-top: 5px;">Load</button>
+      <select id="backgroundSelector" style="width: 100%;""></select>
+      <button onclick="loadSelectedBackground()" style="margin-top: 5px; width: 100%">Load</button>
     </div>
     <!-- Upload -->
     <div style="display: flex; flex-direction: column; align-items: center;">
@@ -786,6 +787,7 @@
     }
 
     let currentColor = "#FF0000"; // couleur par défaut
+    
 
     function updateColor(color) {
     currentColor = color;
@@ -794,6 +796,7 @@
     document.querySelectorAll('.color-swatch').forEach(swatch => {
         swatch.classList.toggle('selected', swatch.dataset.color === color);
     });
+    updatePreviewLine();
     }
 
     document.querySelectorAll('.color-swatch').forEach(swatch => {
@@ -833,6 +836,24 @@
         link.click();
     }
 
+    function updatePreviewLine() {
+      const canvas = document.getElementById('previewCanvas');
+      const ctx = canvas.getContext('2d');
+      const thickness = parseInt(document.getElementById('thickness').value);
+      const color = currentColor;
+
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.strokeStyle = color;
+      ctx.lineWidth = thickness;
+      ctx.lineCap = 'round';
+      ctx.beginPath();
+      ctx.moveTo(10, canvas.height / 2);
+      ctx.lineTo(canvas.width - 10, canvas.height / 2);
+      ctx.stroke();
+    }
+
+    document.getElementById('thickness').addEventListener('input', updatePreviewLine);
+    updatePreviewLine();
 
 
   </script>
