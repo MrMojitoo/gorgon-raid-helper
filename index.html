@@ -577,17 +577,20 @@
       bgCtx.clearRect(0, 0, bgCanvas.width, bgCanvas.height);
       bgCtx.drawImage(currentBackgroundImage, 0, 0, bgCanvas.width, bgCanvas.height);
 
-      // Dessine la légende en bas à droite
-      const legendWidth = 225;
-      const legendHeight = 140;
+      const legend = document.getElementById('legendOverlay');
+      const legendWidth = legend.width;
+      const legendHeight = legend.height;
       const x = bgCanvas.width - legendWidth - 10;
       const y = bgCanvas.height - legendHeight - 10;
-      bgCtx.drawImage(legendImage, x, y, legendWidth, legendHeight);
+      bgCtx.drawImage(legend, x, y, legendWidth, legendHeight);
     }
 
-
     selector.addEventListener('change', loadSelectedBackground);
-    window.addEventListener('load', loadSelectedBackground);
+
+    window.addEventListener('load', () => {
+      loadSelectedBackground();
+      setTimeout(resizeCanvases, 100);
+    });
 
     let drawing = false;
     let currentMode = 'draw';
@@ -597,14 +600,12 @@
     const icons = [];
 
     function resizeCanvases() {
-      const width = document.getElementById('raidplan').offsetWidth;
-      const height = width * 9 / 16;
-      [bgCanvas, canvas].forEach(c => {
-        c.width = width;
-        c.height = height;
-      });
-      drawBackground(); // Redessine l'image de fond avec légende
-      redraw(); // Redessine les tracés
+      const raidplan = document.getElementById('raidplan');
+      const rect = raidplan.getBoundingClientRect();
+      bgCanvas.width = canvas.width = rect.width;
+      bgCanvas.height = canvas.height = rect.height;
+      drawBackground();
+      redraw();
     }
 
     window.addEventListener('resize', resizeCanvases);
