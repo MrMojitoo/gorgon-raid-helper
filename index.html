@@ -279,8 +279,9 @@
 
     #raidplan {
       position: relative;
-      width: 960px;
-      height: 540px;
+      width: 100%;
+      max-width: 1440px;
+      aspect-ratio: 16 / 9;
     }
     #bgCanvas, #canvas {
       position: absolute;
@@ -561,8 +562,8 @@
       bgCtx.drawImage(currentBackgroundImage, 0, 0, bgCanvas.width, bgCanvas.height);
 
       // Dessine la légende en bas à droite
-      const legendWidth = 220;
-      const legendHeight = 140;
+      const legendWidth = 330;
+      const legendHeight = 210;
       const x = bgCanvas.width - legendWidth - 10;
       const y = bgCanvas.height - legendHeight - 10;
       bgCtx.drawImage(legendImage, x, y, legendWidth, legendHeight);
