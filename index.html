@@ -289,6 +289,7 @@
       width: 100%;
       max-width: 1440px;
       aspect-ratio: 16 / 9;
+      background-color: #111;
     }
 
     #bgCanvas, #canvas {
@@ -549,9 +550,6 @@
     legendImage.src = 'images/Legend.png';
 
 
-    bgCanvas.width = canvas.width = 1920;
-    bgCanvas.height = canvas.height = 1080;
-
     const images = ["01_Entrance.PNG", "02_First_Room.PNG"];
     const selector = document.getElementById('backgroundSelector');
     images.forEach(img => {
@@ -781,14 +779,6 @@
 
       // dessin
       rctx.drawImage(canvas, 0, 0);
-
-      // légende (si chargée)
-      const legendImg = document.getElementById('legendOverlay');
-      if (legendImg.complete) {
-        const legendX = bgCanvas.width - legendImg.width - 20;
-        const legendY = bgCanvas.height - legendImg.height - 20;
-        rctx.drawImage(legendImg, legendX, legendY, legendImg.width, legendImg.height);
-      }
 
 
       // téléchargement
