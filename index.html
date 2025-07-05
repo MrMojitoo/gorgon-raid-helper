@@ -294,13 +294,13 @@
     }
 
     .tool-button {
-      width: 40px;
-      height: 40px;
-      background-color: #444;
+      width: 60px;
+      height: 60px;
+      background-color: #333;
       border: none;
       border-radius: 8px;
-      padding: 5px;
-      margin: 5px;
+      padding: 2px;
+      margin: 2px;
       cursor: pointer;
       transition: background 0.3s;
     }
@@ -309,15 +309,16 @@
       width: 100%;
       height: 100%;
       object-fit: contain;
-      filter: invert(1); /* rend l’icône blanche */
     }
 
     .tool-button:hover {
-      background-color: #666;
+      background-color: #555;
+      transform: scale(1.2);
     }
 
     .tool-button.active {
-      background-color: #888;
+      background-color: #777;
+      transform: scale(1.2);
     }
 
 
@@ -339,7 +340,7 @@
   <div id="tools" style="display: flex; justify-content: center; align-items: center; flex-wrap: wrap; gap: 15px; margin-top: 20px;">
     <!-- Couleurs -->
     <div class="color-select" style="display: flex; flex-direction: column; align-items: center;">
-      <label style="margin-bottom: 5px;">Color</label>
+      <label style="margin-bottom: 2px;">Color</label>
       <div id="colorOptions" style="display: grid; grid-template-columns: repeat(5, 30px); gap: 8px;">
         <div class="color-swatch" data-color="#FFFFFF" style="background-color: #FFFFFF;"></div>
         <div class="color-swatch" data-color="#FF0000" style="background-color: #FF0000;"></div>
@@ -351,12 +352,11 @@
         <div class="color-swatch" data-color="#000000" style="background-color: #000000;"></div>
         <div class="color-swatch" data-color="#FFA500" style="background-color: #FFA500;"></div>
         <div class="color-swatch" data-color="#00FF00" style="background-color: #00FF00;"></div>
-        </div>
-      <div id="colorDisplay" style="margin-top: 5px;"></div>
+      </div>
     </div>
     <!-- Épaisseur -->
     <div style="display: flex; flex-direction: column; align-items: center;">
-      <label for="thickness" style="margin-bottom: 5px;">Thickness</label>
+      <label for="thickness" style="margin-bottom: 2px;">Thickness</label>
       <input type="range" id="thickness" min="1" max="10" value="3">
     </div>
     <!-- Outils (icônes) -->
@@ -382,13 +382,13 @@
     </div>
     <!-- Background image -->
     <div style="display: flex; flex-direction: column; align-items: center;">
-      <label for="backgroundSelector" style="margin-bottom: 5px;">Background image</label>
+      <label for="backgroundSelector" style="margin-bottom: 2px;">Background image</label>
       <select id="backgroundSelector"></select>
       <button onclick="loadSelectedBackground()" style="margin-top: 5px;">Load</button>
     </div>
     <!-- Upload -->
     <div style="display: flex; flex-direction: column; align-items: center;">
-      <label style="margin-bottom: 5px;">Upload</label>
+      <label style="margin-bottom: 2px;">Upload</label>
       <input type="file" accept="image/*" onchange="loadCustomBackground(event)">
     </div>
   </div>
