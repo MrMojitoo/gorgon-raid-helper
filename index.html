@@ -293,6 +293,34 @@
       height: 100%;
     }
 
+    .tool-button {
+      width: 40px;
+      height: 40px;
+      background-color: #444;
+      border: none;
+      border-radius: 8px;
+      padding: 5px;
+      margin: 5px;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+
+    .tool-button img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      filter: invert(1); /* rend l’icône blanche */
+    }
+
+    .tool-button:hover {
+      background-color: #666;
+    }
+
+    .tool-button.active {
+      background-color: #888;
+    }
+
+
   </style>
 </head>
 <body>
@@ -329,12 +357,24 @@
     <label>Thickness:
       <input type="range" id="thickness" min="1" max="10" value="3">
     </label>
-    <button id="drawBtn" onclick="setMode('draw')">Draw</button>
-    <button id="eraseBtn" onclick="setMode('erase')">Eraser</button>
-    <button onclick="clearCanvas()">Clear</button>
-    <button onclick="saveImage()">Save</button>
-    <button onclick="undo()">↶ Undo</button>
-    <button onclick="redo()">↷ Redo</button>
+    <button id="drawBtn" class="tool-button" onclick="setMode('draw')">
+      <img src="icons/ui/draw.png" alt="Draw">
+    </button>
+    <button id="eraseBtn" class="tool-button" onclick="setMode('erase')">
+      <img src="icons/ui/erase.png" alt="Erase">
+    </button>
+    <button class="tool-button" onclick="clearCanvas()">
+      <img src="icons/ui/clear.png" alt="Clear">
+    </button>
+    <button class="tool-button" onclick="saveImage()">
+      <img src="icons/ui/save.png" alt="Save">
+    </button>
+    <button class="tool-button" onclick="undo()">
+      <img src="icons/ui/undo.png" alt="Undo">
+    </button>
+    <button class="tool-button" onclick="redo()">
+      <img src="icons/ui/redo.png" alt="Redo">
+    </button>
     <select id="backgroundSelector"></select>
     <button onclick="loadSelectedBackground()">Load</button>
     <input type="file" accept="image/*" onchange="loadCustomBackground(event)">
