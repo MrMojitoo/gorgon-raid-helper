@@ -243,30 +243,36 @@
       align-items: center;
       gap: 5px;
     }
-    #colorPicker option {
-      color: transparent;
+    
+    #colorOptions {
+    display: flex;
+    gap: 5px;
+    flex-wrap: wrap;
+    max-width: 250px;
     }
-    #colorPicker {
-      appearance: none;
-      -webkit-appearance: none;
-      background-color: transparent;
-      border: 2px solid #888;
-      width: 40px;
-      height: 30px;
-      padding: 0;
-      cursor: pointer;
+
+    .color-swatch {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    cursor: pointer;
+    border: 2px solid white;
     }
-    #colorPicker option:hover {
-      background-color: transparent;
+
+    .color-swatch.selected {
+    outline: 2px solid #fff;
+    outline-offset: 2px;
     }
+
     #colorDisplay {
-      display: inline-block;
-      width: 20px;
-      height: 20px;
-      border-radius: 50%;
-      margin-left: 10px;
-      border: 1px solid #fff;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    border: 1px solid #fff;
+    margin-left: 10px;
+    display: inline-block;
     }
+
     #raidplan {
       position: relative;
       width: 960px;
@@ -298,20 +304,21 @@
   <div id="tools">
     <div class="color-select">
       <label>Color:</label>
-      <select id="colorPicker" onchange="updateColorDisplay()">
-        <option value="#FF0000" style="background-color: #FF0000;"></option>
-        <option value="#FFA500" style="background-color: #FFA500;"></option>
-        <option value="#FFFF00" style="background-color: #FFFF00;"></option>
-        <option value="#00FF00" style="background-color: #00FF00;"></option>
-        <option value="#0000FF" style="background-color: #0000FF;"></option>
-        <option value="#4B0082" style="background-color: #4B0082;"></option>
-        <option value="#EE82EE" style="background-color: #EE82EE;"></option>
-        <option value="#000000" style="background-color: #000000;"></option>
-        <option value="#888888" style="background-color: #888888;"></option>
-        <option value="#FFFFFF" style="background-color: #FFFFFF;"></option>
-      </select>
+      <div id="colorOptions">
+        <div class="color-swatch" data-color="#FF0000" style="background-color: #FF0000;"></div>
+        <div class="color-swatch" data-color="#FFA500" style="background-color: #FFA500;"></div>
+        <div class="color-swatch" data-color="#FFFF00" style="background-color: #FFFF00;"></div>
+        <div class="color-swatch" data-color="#00FF00" style="background-color: #00FF00;"></div>
+        <div class="color-swatch" data-color="#0000FF" style="background-color: #0000FF;"></div>
+        <div class="color-swatch" data-color="#4B0082" style="background-color: #4B0082;"></div>
+        <div class="color-swatch" data-color="#EE82EE" style="background-color: #EE82EE;"></div>
+        <div class="color-swatch" data-color="#000000" style="background-color: #000000;"></div>
+        <div class="color-swatch" data-color="#888888" style="background-color: #888888;"></div>
+        <div class="color-swatch" data-color="#FFFFFF" style="background-color: #FFFFFF;"></div>
+      </div>
       <div id="colorDisplay"></div>
     </div>
+
     <label>Thickness:
       <input type="range" id="thickness" min="1" max="10" value="3">
     </label>
@@ -566,7 +573,7 @@
       if (currentMode === 'draw') {
         drawing = true;
         currentPath = {
-          color: document.getElementById('colorPicker').value,
+          color: currentColor,
           width: parseInt(document.getElementById('thickness').value),
           points: [{ x: e.offsetX, y: e.offsetY }]
         };
@@ -647,12 +654,6 @@
       };
     }
 
-    function updateColorDisplay() {
-      const color = document.getElementById('colorPicker').value;
-      document.getElementById('colorDisplay').style.backgroundColor = color;
-    }
-    updateColorDisplay();
-
     function clearCanvas() {
       paths = [];
       redoStack = [];
@@ -674,6 +675,26 @@
         redraw();
       }
     }
+
+    let currentColor = "#FF0000"; // couleur par défaut
+
+    function updateColor(color) {
+    currentColor = color;
+    document.getElementById('colorDisplay').style.backgroundColor = color;
+
+    document.querySelectorAll('.color-swatch').forEach(swatch => {
+        swatch.classList.toggle('selected', swatch.dataset.color === color);
+    });
+    }
+
+    document.querySelectorAll('.color-swatch').forEach(swatch => {
+    swatch.addEventListener('click', () => {
+        updateColor(swatch.dataset.color);
+    });
+    });
+
+    // initialise l’affichage au lancement
+    updateColor(currentColor);
 
 
   </script>
