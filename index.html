@@ -700,6 +700,35 @@
     // initialise l’affichage au lancement
     updateColor(currentColor);
 
+    function saveImage() {
+        const container = document.getElementById('raidplan');
+        const resultCanvas = document.createElement('canvas');
+        const resultCtx = resultCanvas.getContext('2d');
+
+        resultCanvas.width = canvas.width;
+        resultCanvas.height = canvas.height;
+
+        // 1. Dessiner le fond
+        resultCtx.drawImage(bgCanvas, 0, 0);
+
+        // 2. Dessiner les icônes
+        icons.forEach(icon => {
+            const x = parseFloat(icon.style.left);
+            const y = parseFloat(icon.style.top);
+            resultCtx.drawImage(icon, x, y, icon.width, icon.height);
+        });
+
+        // 3. Dessiner les tracés du canvas principal
+        resultCtx.drawImage(canvas, 0, 0);
+
+        // 4. Télécharger l'image
+        const link = document.createElement('a');
+        link.download = 'raidplan.png';
+        link.href = resultCanvas.toDataURL();
+        link.click();
+    }
+
+
 
   </script>
 </body>
