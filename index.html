@@ -279,16 +279,27 @@
 
     #raidplan {
       position: relative;
-      width: 960px;
-      height: 540px;
+      width: 100%;                  /* s'adapte à l'écran */
+      max-width: 1280px;            /* tu peux mettre 1440px ou 1920px si tu veux afficher plus large */
+      aspect-ratio: 16 / 9;         /* garde les proportions */
+      margin: auto;
     }
+
     #bgCanvas, #canvas {
-      position: absolute;
-      top: 0;
-      left: 0;
       width: 100%;
       height: 100%;
     }
+    
+    #legendOverlay {
+      position: absolute;
+      bottom: 20px;
+      right: 20px;
+      width: 240px; /* ou ajuste selon rendu */
+      max-width: 20%;
+      z-index: 5;
+      pointer-events: none;
+    }
+
 
   </style>
 </head>
@@ -387,6 +398,8 @@
       <canvas id="bgCanvas"></canvas>
       <canvas id="canvas"></canvas>
     </div>
+    <img id="legendOverlay" src="images/Legend.png" alt="Legend">
+
   </div>
 
 
@@ -509,8 +522,8 @@
     legendImage.src = 'images/Legend.png';
 
 
-    bgCanvas.width = canvas.width = 960;
-    bgCanvas.height = canvas.height = 540;
+    bgCanvas.width = canvas.width = 1920;
+    bgCanvas.height = canvas.height = 1080;
 
     const images = ["01_Entrance.PNG", "02_First_Room.PNG"];
     const selector = document.getElementById('backgroundSelector');
@@ -724,32 +737,41 @@
     updateColor(currentColor);
 
     function saveImage() {
-        const container = document.getElementById('raidplan');
-        const resultCanvas = document.createElement('canvas');
-        const resultCtx = resultCanvas.getContext('2d');
+      const resultCanvas = document.createElement('canvas');
+      resultCanvas.width = bgCanvas.width;
+      resultCanvas.height = bgCanvas.height;
+      const rctx = resultCanvas.getContext('2d');
 
-        resultCanvas.width = canvas.width;
-        resultCanvas.height = canvas.height;
+      // fond
+      rctx.drawImage(bgCanvas, 0, 0);
 
-        // 1. Dessiner le fond
-        resultCtx.drawImage(bgCanvas, 0, 0);
+      // icônes
+      icons.forEach(icon => {
+        const x = parseFloat(icon.style.left);
+        const y = parseFloat(icon.style.top);
+        rctx.drawImage(icon, x, y, 30, 30);
+      });
 
-        // 2. Dessiner les icônes
-        icons.forEach(icon => {
-            const x = parseFloat(icon.style.left);
-            const y = parseFloat(icon.style.top);
-            resultCtx.drawImage(icon, x, y, icon.width, icon.height);
-        });
+      // dessin
+      rctx.drawImage(canvas, 0, 0);
 
-        // 3. Dessiner les tracés du canvas principal
-        resultCtx.drawImage(canvas, 0, 0);
+      // légende (si chargée)
+      const legend = document.getElementById('legendOverlay');
+      if (legend && legend.complete) {
+        const legendWidth = 240;
+        const legendHeight = legend.naturalHeight * (legendWidth / legend.naturalWidth);
+        const x = resultCanvas.width - legendWidth - 20;
+        const y = resultCanvas.height - legendHeight - 20;
+        rctx.drawImage(legend, x, y, legendWidth, legendHeight);
+      }
 
-        // 4. Télécharger l'image
-        const link = document.createElement('a');
-        link.download = 'raidplan.png';
-        link.href = resultCanvas.toDataURL();
-        link.click();
+      // téléchargement
+      const link = document.createElement('a');
+      link.download = 'raidplan.png';
+      link.href = resultCanvas.toDataURL();
+      link.click();
     }
+
 
 
 
