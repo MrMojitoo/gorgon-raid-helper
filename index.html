@@ -246,27 +246,28 @@
     }
 
     #colorOptions {
-    display: grid;
-    grid-template-columns: repeat(5, 30px);
-    gap: 8px;
-    margin-top: 10px;
-    justify-content: center;
+      display: grid;
+      grid-template-columns: repeat(5, 30px);
+      gap: 8px;
+      margin-top: 10px;
+      justify-content: center;
     }
 
     .color-swatch {
-    width: 30px;
-    height: 30px;
-    border: 2px solid #ccc;
-    border-radius: 50%;
-    cursor: pointer;
-    transition: transform 0.2s;
+      width: 30px;
+      height: 30px;
+      border: 2px solid #ccc;
+      border-radius: 50%;
+      cursor: pointer;
+      transition: transform 0.2s;
     }
     .color-swatch:hover {
-    transform: scale(1.2);
-    border-color: white;
+      transform: scale(1.2);
+      border-color: white;
     }
     .color-swatch.selected {
-    border: 3px solid white;
+      border: 3px solid white;
+      transform: scale(1.2);
     }
 
     #colorDisplay {
