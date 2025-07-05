@@ -288,6 +288,7 @@
     #raidplan {
       position: relative;
       width: 100%;
+      max-width: 1440px;
       aspect-ratio: 16 / 9;
       background-color: #111;
     }
@@ -566,7 +567,7 @@
       const img = new Image();
       img.onload = () => {
         currentBackgroundImage = img;
-        drawBackground();
+        resizeCanvases();
       };
       img.src = `images/${selected}`;
     }
