@@ -343,11 +343,11 @@
   <div class="attack-info" id="attackInfo"></div>
 
   <hr />
-  <h2 style="text-align: center">Raidplan</h2>
+  <h2 style="text-align: center; margin-top: 20px; font-size: 1.5em;">Raidplan</h2>
 
 
 
-  <div id="tools" style="display: flex; justify-content: center; align-items: center; flex-wrap: wrap; gap: 15px; margin-top: 20px; margin-left: 175px;">
+  <div id="tools" style="display: flex; justify-content: center; align-items: center; flex-wrap: wrap; gap: 15px; margin-top: 20px; margin-left: 185px;">
     <!-- Couleurs -->
     <div class="color-select" style="display: flex; flex-direction: column; align-items: center;">
       <label style="margin-bottom: 0px;">Color</label>
@@ -393,7 +393,7 @@
     <!-- Background image -->
     <div style="display: flex; flex-direction: column; align-items: center; width: 250px;">
       <label for="backgroundSelector" style="margin-bottom: 0px;">Background image</label>
-      <select id="backgroundSelector" style="width: 100%;"></select>
+      <select id="backgroundSelector" style="width: 100%; border: 2px solid white; border-radius: 8px;"></select>
       <button onclick="loadSelectedBackground()" style="margin-top: 5px; width: 100%">Load</button>
     </div>
     <!-- Upload -->
@@ -799,13 +799,21 @@
     
 
     function updateColor(color) {
-    currentColor = color;
-    document.getElementById('colorDisplay').style.backgroundColor = color;
+      currentColor = color;
+      document.getElementById('colorDisplay').style.backgroundColor = color;
 
-    document.querySelectorAll('.color-swatch').forEach(swatch => {
-        swatch.classList.toggle('selected', swatch.dataset.color === color);
-    });
+      // Retire la classe 'selected' de toutes les couleurs
+      document.querySelectorAll('.color-swatch').forEach(swatch => {
+        swatch.classList.remove('selected');
+      });
+
+      // Ajoute la classe 'selected' uniquement à la couleur choisie
+      const selectedSwatch = document.querySelector(`.color-swatch[data-color="${color}"]`);
+      if (selectedSwatch) {
+        selectedSwatch.classList.add('selected');
+      }
     }
+
 
     document.querySelectorAll('.color-swatch').forEach(swatch => {
     swatch.addEventListener('click', () => {
