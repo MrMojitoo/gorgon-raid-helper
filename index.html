@@ -566,8 +566,8 @@
       if (currentMode === 'draw') {
         drawing = true;
         currentPath = {
-          color: '#FF0000',
-          width: 3,
+          color: document.getElementById('colorPicker').value,
+          width: parseInt(document.getElementById('thickness').value),
           points: [{ x: e.offsetX, y: e.offsetY }]
         };
       } else if (currentMode === 'erase') {
@@ -575,6 +575,7 @@
         eraseAt(e.offsetX, e.offsetY);
       }
     });
+
     canvas.addEventListener('mousemove', (e) => {
       if (!drawing) return;
       const x = e.offsetX, y = e.offsetY;
