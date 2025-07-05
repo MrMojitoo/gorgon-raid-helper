@@ -504,6 +504,10 @@
     const canvas = document.getElementById('canvas');
     const bgCtx = bgCanvas.getContext('2d');
     const ctx = canvas.getContext('2d');
+    let currentBackgroundImage = null;
+    const legendImage = new Image();
+    legendImage.src = 'images/Legend.png';
+
 
     bgCanvas.width = canvas.width = 960;
     bgCanvas.height = canvas.height = 540;
@@ -516,16 +520,33 @@
       option.textContent = img;
       selector.appendChild(option);
     });
+
     function loadSelectedBackground() {
       const selected = selector.value;
       if (!selected) return;
+
       const img = new Image();
       img.onload = () => {
-        bgCtx.clearRect(0, 0, bgCanvas.width, bgCanvas.height);
-        bgCtx.drawImage(img, 0, 0, bgCanvas.width, bgCanvas.height);
+        currentBackgroundImage = img;
+        drawBackground();
       };
       img.src = `images/${selected}`;
     }
+    
+    function drawBackground() {
+      if (!currentBackgroundImage) return;
+      bgCtx.clearRect(0, 0, bgCanvas.width, bgCanvas.height);
+      bgCtx.drawImage(currentBackgroundImage, 0, 0, bgCanvas.width, bgCanvas.height);
+
+      // Dessine la légende en bas à droite
+      const legendWidth = 150;
+      const legendHeight = 60;
+      const x = bgCanvas.width - legendWidth - 10;
+      const y = bgCanvas.height - legendHeight - 10;
+      bgCtx.drawImage(legendImage, x, y, legendWidth, legendHeight);
+    }
+
+
     selector.addEventListener('change', loadSelectedBackground);
     window.addEventListener('load', loadSelectedBackground);
 
@@ -543,8 +564,10 @@
         c.width = width;
         c.height = height;
       });
-      redraw();
+      drawBackground(); // Redessine l'image de fond avec légende
+      redraw(); // Redessine les tracés
     }
+
     window.addEventListener('resize', resizeCanvases);
     resizeCanvases();
 
