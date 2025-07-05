@@ -210,27 +210,19 @@
       border: 2px solid #888;
       cursor: pointer;
     }
-    #canvas-wrapper {
-      display: flex;
-      justify-content: center;
-      margin-top: 20px;
-      width: 100%;
-      max-width: 1920px;
-    }
-
     #raidplan-container {
       display: flex;
-      flex-direction: row-reverse; /* important */
+      justify-content: center;
       align-items: flex-start;
       gap: 20px;
+      margin-top: 20px;
     }
-
     .icon-select {
       display: grid;
       grid-template-rows: repeat(10, 40px);
       grid-auto-flow: column;
       justify-content: end;
-      direction: ltr;
+      direction: rtl;
       gap: 10px;
       padding: 10px;
     }
@@ -244,7 +236,7 @@
       width: 30px;
       height: 30px;
       cursor: move;
-      z-index: 3;
+      z-index: 10;
     }
     .color-select {
       display: inline-flex;
@@ -287,12 +279,9 @@
 
     #raidplan {
       position: relative;
-      width: 100%;
-      max-width: 1440px;
-      aspect-ratio: 16 / 9;
-      background-color: #111;
+      width: 960px;
+      height: 540px;
     }
-
     #bgCanvas, #canvas {
       position: absolute;
       top: 0;
@@ -300,34 +289,6 @@
       width: 100%;
       height: 100%;
     }
-
-    #bgCanvas {
-      z-index: 1;
-    }
-
-    #canvas {
-      z-index: 2;
-    }
-
-    .icon-instance {
-      position: absolute;
-      width: 30px;
-      height: 30px;
-      cursor: move;
-      z-index: 3;
-    }
-
-    #legendOverlay {
-      position: absolute;
-      z-index: 4;
-      bottom: 20px;
-      right: 20px;
-      width: 180px;
-      height: auto;
-      pointer-events: none;
-    }
-
-
 
   </style>
 </head>
@@ -376,58 +337,55 @@
     <input type="file" accept="image/*" onchange="loadCustomBackground(event)">
   </div>
 
-  <div id="canvas-wrapper">
-    <div id="raidplan-container">
-      <div class="icon-select">
-        <img src="icons/1tank.png" onclick="addIcon(this.src)">
-        <img src="icons/2Mage.png" onclick="addIcon(this.src)">
-        <img src="icons/3Evade1.png" onclick="addIcon(this.src)">
-        <img src="icons/4Evade2.png" onclick="addIcon(this.src)">
-        <img src="icons/5VG.png" onclick="addIcon(this.src)">
-        <img src="icons/6Sword.png" onclick="addIcon(this.src)">
-        <img src="icons/7Blood.png" onclick="addIcon(this.src)">
-        <img src="icons/8Hatchet.png" onclick="addIcon(this.src)">
-        <img src="icons/9HatchetScorp.png" onclick="addIcon(this.src)">
-        <img src="icons/10Flail.png" onclick="addIcon(this.src)">
-        <img src="icons/1.png" onclick="addIcon(this.src)">
-        <img src="icons/2.png" onclick="addIcon(this.src)">
-        <img src="icons/3.png" onclick="addIcon(this.src)">
-        <img src="icons/4.png" onclick="addIcon(this.src)">
-        <img src="icons/5.png" onclick="addIcon(this.src)">
-        <img src="icons/6.png" onclick="addIcon(this.src)">
-        <img src="icons/7.png" onclick="addIcon(this.src)">
-        <img src="icons/8.png" onclick="addIcon(this.src)">
-        <img src="icons/9.png" onclick="addIcon(this.src)">
-        <img src="icons/0.png" onclick="addIcon(this.src)">
-        <img src="icons/1ArmorBreaker.png" onclick="addIcon(this.src)">
-        <img src="icons/1ClearOut.png" onclick="addIcon(this.src)">
-        <img src="icons/1Counter.png" onclick="addIcon(this.src)">
-        <img src="icons/1Rupture.png" onclick="addIcon(this.src)">
-        <img src="icons/1Shockwave.png" onclick="addIcon(this.src)">
-        <img src="icons/3Grav1.png" onclick="addIcon(this.src)">
-        <img src="icons/3Mael1.png" onclick="addIcon(this.src)">
-        <img src="icons/3Reap1.png" onclick="addIcon(this.src)">
-        <img src="icons/4Grav2.png" onclick="addIcon(this.src)">
-        <img src="icons/4Mael2.png" onclick="addIcon(this.src)">
-        <img src="icons/4Reap2.png" onclick="addIcon(this.src)">
-        <img src="icons/5VGsacred.png" onclick="addIcon(this.src)">
-        <img src="icons/6BigSkew.png" onclick="addIcon(this.src)">
-        <img src="icons/6SmallPerf.png" onclick="addIcon(this.src)">
-        <img src="icons/6SwordSweep.png" onclick="addIcon(this.src)">
-        <img src="icons/7Windchill.png" onclick="addIcon(this.src)">
-        <img src="icons/8SmallSkew.png" onclick="addIcon(this.src)">
-        <img src="icons/8BigPerf.png" onclick="addIcon(this.src)">
-        <img src="icons/8HatSweep.png" onclick="addIcon(this.src)">
-        <img src="icons/9Jav.png" onclick="addIcon(this.src)">
-        <img src="icons/9Kick.png" onclick="addIcon(this.src)">
-        <img src="icons/9ScorpSweep.png" onclick="addIcon(this.src)">
-        <img src="icons/10Fsacred.png" onclick="addIcon(this.src)">
-      </div>
-      <div id="raidplan">
-        <canvas id="bgCanvas"></canvas>
-        <canvas id="canvas"></canvas>
-        <img id="legendOverlay" src="images/Legend.png" alt="Legend"> 
-      </div>
+  <div id="raidplan-container">
+    <div class="icon-select">
+      <img src="icons/1tank.png" onclick="addIcon(this.src)">
+      <img src="icons/2Mage.png" onclick="addIcon(this.src)">
+      <img src="icons/3Evade1.png" onclick="addIcon(this.src)">
+      <img src="icons/4Evade2.png" onclick="addIcon(this.src)">
+      <img src="icons/5VG.png" onclick="addIcon(this.src)">
+      <img src="icons/6Sword.png" onclick="addIcon(this.src)">
+      <img src="icons/7Blood.png" onclick="addIcon(this.src)">
+      <img src="icons/8Hatchet.png" onclick="addIcon(this.src)">
+      <img src="icons/9HatchetScorp.png" onclick="addIcon(this.src)">
+      <img src="icons/10Flail.png" onclick="addIcon(this.src)">
+      <img src="icons/1.png" onclick="addIcon(this.src)">
+      <img src="icons/2.png" onclick="addIcon(this.src)">
+      <img src="icons/3.png" onclick="addIcon(this.src)">
+      <img src="icons/4.png" onclick="addIcon(this.src)">
+      <img src="icons/5.png" onclick="addIcon(this.src)">
+      <img src="icons/6.png" onclick="addIcon(this.src)">
+      <img src="icons/7.png" onclick="addIcon(this.src)">
+      <img src="icons/8.png" onclick="addIcon(this.src)">
+      <img src="icons/9.png" onclick="addIcon(this.src)">
+      <img src="icons/0.png" onclick="addIcon(this.src)">
+      <img src="icons/1ArmorBreaker.png" onclick="addIcon(this.src)">
+      <img src="icons/1ClearOut.png" onclick="addIcon(this.src)">
+      <img src="icons/1Counter.png" onclick="addIcon(this.src)">
+      <img src="icons/1Rupture.png" onclick="addIcon(this.src)">
+      <img src="icons/1Shockwave.png" onclick="addIcon(this.src)">
+      <img src="icons/3Grav1.png" onclick="addIcon(this.src)">
+      <img src="icons/3Mael1.png" onclick="addIcon(this.src)">
+      <img src="icons/3Reap1.png" onclick="addIcon(this.src)">
+      <img src="icons/4Grav2.png" onclick="addIcon(this.src)">
+      <img src="icons/4Mael2.png" onclick="addIcon(this.src)">
+      <img src="icons/4Reap2.png" onclick="addIcon(this.src)">
+      <img src="icons/5VGsacred.png" onclick="addIcon(this.src)">
+      <img src="icons/6BigSkew.png" onclick="addIcon(this.src)">
+      <img src="icons/6SmallPerf.png" onclick="addIcon(this.src)">
+      <img src="icons/6SwordSweep.png" onclick="addIcon(this.src)">
+      <img src="icons/7Windchill.png" onclick="addIcon(this.src)">
+      <img src="icons/8SmallSkew.png" onclick="addIcon(this.src)">
+      <img src="icons/8BigPerf.png" onclick="addIcon(this.src)">
+      <img src="icons/8HatSweep.png" onclick="addIcon(this.src)">
+      <img src="icons/9Jav.png" onclick="addIcon(this.src)">
+      <img src="icons/9Kick.png" onclick="addIcon(this.src)">
+      <img src="icons/9ScorpSweep.png" onclick="addIcon(this.src)">
+      <img src="icons/10Fsacred.png" onclick="addIcon(this.src)">
+    </div>
+    <div id="raidplan">
+      <canvas id="bgCanvas"></canvas>
+      <canvas id="canvas"></canvas>
     </div>
   </div>
 
@@ -551,6 +509,9 @@
     legendImage.src = 'images/Legend.png';
 
 
+    bgCanvas.width = canvas.width = 960;
+    bgCanvas.height = canvas.height = 540;
+
     const images = ["01_Entrance.PNG", "02_First_Room.PNG"];
     const selector = document.getElementById('backgroundSelector');
     images.forEach(img => {
@@ -567,7 +528,7 @@
       const img = new Image();
       img.onload = () => {
         currentBackgroundImage = img;
-        resizeCanvases();
+        drawBackground();
       };
       img.src = `images/${selected}`;
     }
@@ -577,20 +538,17 @@
       bgCtx.clearRect(0, 0, bgCanvas.width, bgCanvas.height);
       bgCtx.drawImage(currentBackgroundImage, 0, 0, bgCanvas.width, bgCanvas.height);
 
-      const legend = document.getElementById('legendOverlay');
-      const legendWidth = legend.width;
-      const legendHeight = legend.height;
+      // Dessine la légende en bas à droite
+      const legendWidth = 150;
+      const legendHeight = 60;
       const x = bgCanvas.width - legendWidth - 10;
       const y = bgCanvas.height - legendHeight - 10;
-      bgCtx.drawImage(legend, x, y, legendWidth, legendHeight);
+      bgCtx.drawImage(legendImage, x, y, legendWidth, legendHeight);
     }
 
-    selector.addEventListener('change', loadSelectedBackground);
 
-    window.addEventListener('load', () => {
-      loadSelectedBackground();
-      setTimeout(resizeCanvases, 100);
-    });
+    selector.addEventListener('change', loadSelectedBackground);
+    window.addEventListener('load', loadSelectedBackground);
 
     let drawing = false;
     let currentMode = 'draw';
@@ -600,12 +558,14 @@
     const icons = [];
 
     function resizeCanvases() {
-      const raidplan = document.getElementById('raidplan');
-      const rect = raidplan.getBoundingClientRect();
-      bgCanvas.width = canvas.width = rect.width;
-      bgCanvas.height = canvas.height = rect.height;
-      drawBackground();
-      redraw();
+      const width = document.getElementById('raidplan').offsetWidth;
+      const height = width * 9 / 16;
+      [bgCanvas, canvas].forEach(c => {
+        c.width = width;
+        c.height = height;
+      });
+      drawBackground(); // Redessine l'image de fond avec légende
+      redraw(); // Redessine les tracés
     }
 
     window.addEventListener('resize', resizeCanvases);
@@ -764,32 +724,32 @@
     updateColor(currentColor);
 
     function saveImage() {
-      const resultCanvas = document.createElement('canvas');
-      resultCanvas.width = bgCanvas.width;
-      resultCanvas.height = bgCanvas.height;
-      const rctx = resultCanvas.getContext('2d');
+        const container = document.getElementById('raidplan');
+        const resultCanvas = document.createElement('canvas');
+        const resultCtx = resultCanvas.getContext('2d');
 
-      // fond
-      rctx.drawImage(bgCanvas, 0, 0);
+        resultCanvas.width = canvas.width;
+        resultCanvas.height = canvas.height;
 
-      // icônes
-      icons.forEach(icon => {
-        const x = parseFloat(icon.style.left);
-        const y = parseFloat(icon.style.top);
-        rctx.drawImage(icon, x, y, 30, 30);
-      });
+        // 1. Dessiner le fond
+        resultCtx.drawImage(bgCanvas, 0, 0);
 
-      // dessin
-      rctx.drawImage(canvas, 0, 0);
+        // 2. Dessiner les icônes
+        icons.forEach(icon => {
+            const x = parseFloat(icon.style.left);
+            const y = parseFloat(icon.style.top);
+            resultCtx.drawImage(icon, x, y, icon.width, icon.height);
+        });
 
+        // 3. Dessiner les tracés du canvas principal
+        resultCtx.drawImage(canvas, 0, 0);
 
-      // téléchargement
-      const link = document.createElement('a');
-      link.download = 'raidplan.png';
-      link.href = resultCanvas.toDataURL();
-      link.click();
+        // 4. Télécharger l'image
+        const link = document.createElement('a');
+        link.download = 'raidplan.png';
+        link.href = resultCanvas.toDataURL();
+        link.click();
     }
-
 
 
 
