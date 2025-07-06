@@ -846,6 +846,21 @@
         link.click();
     }
 
+    function loadCustomBackground(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        const img = new Image();
+        img.onload = () => {
+          currentBackgroundImage = img;
+          resizeCanvases(); // Redessine après chargement
+        };
+        img.src = e.target.result;
+      };
+      reader.readAsDataURL(file);
+    }
 
 
   </script>
