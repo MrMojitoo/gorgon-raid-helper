@@ -808,7 +808,8 @@
       });
 
       // Ajoute la classe 'selected' uniquement à la couleur choisie
-      const selectedSwatch = document.querySelector(`.color-swatch[data-color="${color}"]`);
+      const selectedSwatch = Array.from(document.querySelectorAll('.color-swatch'))
+        .find(swatch => swatch.dataset.color === color);
       if (selectedSwatch) {
         selectedSwatch.classList.add('selected');
       }
